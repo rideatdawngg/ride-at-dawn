@@ -3,6 +3,7 @@
 //   DISCORD_BOT_TOKEN            read-only bot in the RAD server
 //   DISCORD_ANNOUNCE_CHANNEL_ID  e.g. #announcements
 //   DISCORD_GALLERY_CHANNEL_ID   e.g. #loot-and-clogs
+//   (#lvl-ups and #deaths-coffer IDs are built in; override with DISCORD_LEVELS_CHANNEL_ID / DISCORD_DEATHS_CHANNEL_ID)
 // Only message text, image links, display names and dates are passed to visitors.
 
 const API = "https://discord.com/api/v10";
@@ -32,6 +33,34 @@ const clean = (s = "") => s
 
 const who = (m: Msg) => m.member?.nick || m.author.global_name || m.author.username;
 
+// Pull image posts (attachments + embed images) from a channel, newest first, skipping repeats.
+function shots(ms: Msg[], max: number) {
+  const list: { url: string; caption: string; author: string; date: string }[] = [];
+  const seen = new Set<string>(), caps = new Set<string>();
+  for (const m of ms) {
+    const e = (m.embeds || [])[0];
+    const caption = clean(e?.title || e?.description || m.content || "").replace(/[*_`>#]/g, "").split("\n")[0].slice(0, 140);
+    const urls = [
+      ...(m.attachments || []).filter(a => (a.content_type || "").startsWith("image/") || IMG.test(a.filename || "")).map(a => a.url),
+      ...(m.embeds || []).map(x => x.image?.url).filter((u): u is string => !!u && /^https:/.test(u)),
+    ];
+    if (!urls.length) continue;
+    // Skip repeats (same caption) so the slideshow stays varied.
+    if (caption && caps.has(caption.toLowerCase())) continue;
+    if (caption) caps.add(caption.toLowerCase());
+    // Bots/webhooks already name the player in the caption, so don't credit the bot.
+    const author = m.webhook_id || m.author.bot ? "" : who(m);
+    for (const url of urls) {
+      const k = url.split("?")[0];
+      if (seen.has(k)) continue;
+      seen.add(k);
+      list.push({ url, caption, author, date: m.timestamp });
+    }
+    if (list.length >= max) break;
+  }
+  return list.slice(0, max);
+}
+
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
   status,
   headers: {
@@ -45,9 +74,9 @@ export default async () => {
   const token = Netlify.env.get("DISCORD_BOT_TOKEN");
   const annId = Netlify.env.get("DISCORD_ANNOUNCE_CHANNEL_ID");
   const galId = Netlify.env.get("DISCORD_GALLERY_CHANNEL_ID");
-  if (!token || (!annId && !galId)) return json({ error: "not_configured" }, 503);
+  if (!token) return json({ error: "not_configured" }, 503);
 
-  const out: { announcements: unknown[]; gallery: unknown[] } = { announcements: [], gallery: [] };
+  const out: { announcements: unknown[]; gallery: unknown[]; galleries: Record<string, unknown[]> } = { announcements: [], gallery: [], galleries: {} };
 
   if (annId) {
     try {
@@ -65,34 +94,19 @@ export default async () => {
     } catch { /* leave empty */ }
   }
 
-  if (galId) {
-    try {
-      const ms = await messages(galId, token);
-      const seen = new Set<string>(), caps = new Set<string>();
-      for (const m of ms) {
-        const e = (m.embeds || [])[0];
-        const caption = clean(e?.title || e?.description || m.content || "").replace(/[*_`>#]/g, "").split("\n")[0].slice(0, 140);
-        const urls = [
-          ...(m.attachments || []).filter(a => (a.content_type || "").startsWith("image/") || IMG.test(a.filename || "")).map(a => a.url),
-          ...(m.embeds || []).map(x => x.image?.url).filter((u): u is string => !!u && /^https:/.test(u)),
-        ];
-        // Skip repeat drops (same caption) so the slideshow stays varied.
-        if (caption && caps.has(caption.toLowerCase())) continue;
-        if (caption) caps.add(caption.toLowerCase());
-        // Loot bots/webhooks already name the player in the caption, so don't credit the bot.
-        const author = m.webhook_id || m.author.bot ? "" : who(m);
-        for (const url of urls) {
-          const key = url.split("?")[0];
-          if (seen.has(key)) continue;
-          seen.add(key);
-          out.gallery.push({ url, caption, author, date: m.timestamp });
-        }
-        if (out.gallery.length >= 15) break;
-      }
-    } catch { /* leave empty */ }
-  }
+  // Screenshot slideshows. Channel IDs aren't secret; env vars can override them.
+  const shows: [string, string | undefined, number][] = [
+    ["loot",   galId, 15],
+    ["levels", Netlify.env.get("DISCORD_LEVELS_CHANNEL_ID") || "1532057592841506927", 10],
+    ["deaths", Netlify.env.get("DISCORD_DEATHS_CHANNEL_ID") || "1532057908605353984", 10],
+  ];
+  await Promise.all(shows.map(async ([key, id, max]) => {
+    if (!id) return;
+    try { out.galleries[key] = shots(await messages(id, token), max); } catch { /* leave empty */ }
+  }));
+  out.gallery = out.galleries.loot || [];
 
-  if (!out.announcements.length && !out.gallery.length) return json({ error: "empty" }, 502);
+  if (!out.announcements.length && !Object.values(out.galleries).some(g => g.length)) return json({ error: "empty" }, 502);
   return json(out);
 };
 

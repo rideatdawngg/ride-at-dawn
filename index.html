@@ -217,6 +217,12 @@ blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;b
 .dots{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
 .dots button{width:9px;height:9px;border-radius:50%;border:0;background:#3a3330;cursor:pointer;padding:0}
 .dots button.on{background:var(--gold)}
+.mini-shows{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+.mini-shows.single{grid-template-columns:1fr}
+.slides.mini{aspect-ratio:4/3}
+.slides.mini .cap{padding:26px 12px 10px;font-size:.82rem}
+.slides.mini .sl-btn{width:32px;height:32px;font-size:1.1rem}
+@media (max-width:560px){.mini-shows{grid-template-columns:1fr}}
 .feed-label{font-family:Cinzel,serif;font-weight:800;color:#fff;font-size:1.1rem;margin-bottom:10px}
 .ann{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:8px;padding:16px 18px;margin-bottom:12px}
 .ann .date{color:var(--red2);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em}
@@ -382,16 +388,27 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
   <div class="wrap">
     <div class="sec-head">
       <div><div class="eyebrow">Straight From the Discord</div><h2>Clan Feed</h2></div>
-      <p>Latest announcements and fresh loot from #loot-and-clogs, updated automatically.</p>
+      <p>Latest announcements, loot, level ups and deaths, pulled straight from the Discord automatically.</p>
     </div>
     <div class="feed-grid" id="feed-grid">
-      <div id="gal-wrap" hidden>
-        <div class="feed-label">💰 Loot &amp; Clogs</div>
-        <div class="slides" id="slides" aria-roledescription="carousel">
-          <button class="sl-btn sl-prev" type="button" aria-label="Previous">‹</button>
-          <button class="sl-btn sl-next" type="button" aria-label="Next">›</button>
+      <div id="gal-col">
+        <div id="gal-wrap" class="show" hidden>
+          <div class="feed-label">💰 Loot &amp; Clogs</div>
+          <div class="slides" aria-roledescription="carousel"><button class="sl-btn sl-prev" type="button" aria-label="Previous">‹</button><button class="sl-btn sl-next" type="button" aria-label="Next">›</button></div>
+          <div class="dots"></div>
         </div>
-        <div class="dots" id="dots"></div>
+        <div class="mini-shows">
+          <div id="lvl-wrap" class="show" hidden>
+            <div class="feed-label">📈 Level Ups</div>
+            <div class="slides mini" aria-roledescription="carousel"><button class="sl-btn sl-prev" type="button" aria-label="Previous">‹</button><button class="sl-btn sl-next" type="button" aria-label="Next">›</button></div>
+            <div class="dots"></div>
+          </div>
+          <div id="death-wrap" class="show" hidden>
+            <div class="feed-label">💀 Deaths Coffer</div>
+            <div class="slides mini" aria-roledescription="carousel"><button class="sl-btn sl-prev" type="button" aria-label="Previous">‹</button><button class="sl-btn sl-next" type="button" aria-label="Next">›</button></div>
+            <div class="dots"></div>
+          </div>
+        </div>
       </div>
       <div id="ann-wrap" hidden>
         <div class="feed-label">📣 Announcements</div>
@@ -761,30 +778,38 @@ updateNewsletter(); setInterval(updateNewsletter, 600000);
     .replace(/(^|[\s(])(https?:\/\/[^\s<]+)/g,'$1<a href="$2" target="_blank" rel="noopener">$2</a>')
     .replace(/^[-•] /gm,'◆ ').replace(/\n/g,'<br>').replace(/<\/span><br>/g,'</span>');
   const when = d => new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  function makeShow(wrap, items, ms){
+    const box=wrap.querySelector('.slides'), dots=wrap.querySelector('.dots');
+    box.insertAdjacentHTML('afterbegin', items.map((g,i)=>`<figure class="slide${i?'':' on'}"><img src="${esc(g.url)}" alt="${esc(g.caption||'Screenshot')}" ${i?'loading="lazy"':''}><figcaption class="cap">${g.caption?`<b>${esc(g.caption)}</b>`:''}<small>${g.author?esc(g.author)+' · ':''}${when(g.date)}</small></figcaption></figure>`).join(''));
+    dots.innerHTML = items.map((_,i)=>`<button type="button" aria-label="Slide ${i+1}" class="${i?'':'on'}"></button>`).join('');
+    const slides=[...box.querySelectorAll('.slide')], ds=[...dots.children];
+    let cur=0, timer;
+    const go = n => { slides[cur].classList.remove('on'); ds[cur].classList.remove('on'); cur=(n+slides.length)%slides.length; slides[cur].classList.add('on'); ds[cur].classList.add('on'); };
+    const start = () => { clearInterval(timer); if (slides.length>1) timer=setInterval(()=>go(cur+1),ms); };
+    box.querySelector('.sl-prev').onclick=()=>{ go(cur-1); start(); };
+    box.querySelector('.sl-next').onclick=()=>{ go(cur+1); start(); };
+    ds.forEach((b,i)=>b.onclick=()=>{ go(i); start(); });
+    box.addEventListener('mouseenter',()=>clearInterval(timer)); box.addEventListener('mouseleave',start);
+    if (slides.length<2){ box.querySelectorAll('.sl-btn').forEach(b=>b.hidden=true); dots.hidden=true; }
+    start();
+    wrap.hidden=false;
+  }
   fetch('/api/discord-feed').then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(d=>{
     const anns=d.announcements||[], gal=d.gallery||[];
-    if (!anns.length && !gal.length) return;
+    if (!anns.length && !gal.length && !Object.values(d.galleries||{}).some(g=>g.length)) return;
     if (anns.length){
       document.getElementById('ann-list').innerHTML = anns.map(a=>`<div class="ann"><div class="date">${when(a.date)} · ${esc(a.author)}</div><div class="txt${a.text.length>380?' long':''}">${md(a.text)}</div>${a.image?`<img src="${esc(a.image)}" alt="" loading="lazy">`:''}<a class="more" href="${esc(a.link)}" target="_blank" rel="noopener">Read in Discord →</a></div>`).join('');
       document.getElementById('ann-wrap').hidden=false;
     }
-    if (gal.length){
-      const box=document.getElementById('slides'), dots=document.getElementById('dots');
-      box.insertAdjacentHTML('afterbegin', gal.map((g,i)=>`<figure class="slide${i?'':' on'}"><img src="${esc(g.url)}" alt="${esc(g.caption||'Loot screenshot')}" ${i?'loading="lazy"':''}><figcaption class="cap">${g.caption?`<b>${esc(g.caption)}</b>`:''}<small>${g.author?esc(g.author)+' · ':''}${when(g.date)}</small></figcaption></figure>`).join(''));
-      dots.innerHTML = gal.map((_,i)=>`<button type="button" aria-label="Slide ${i+1}" class="${i?'':'on'}"></button>`).join('');
-      const slides=[...box.querySelectorAll('.slide')], ds=[...dots.children];
-      let cur=0, timer;
-      const go = n => { slides[cur].classList.remove('on'); ds[cur].classList.remove('on'); cur=(n+slides.length)%slides.length; slides[cur].classList.add('on'); ds[cur].classList.add('on'); };
-      const start = () => { clearInterval(timer); if (slides.length>1) timer=setInterval(()=>go(cur+1),5500); };
-      box.querySelector('.sl-prev').onclick=()=>{ go(cur-1); start(); };
-      box.querySelector('.sl-next').onclick=()=>{ go(cur+1); start(); };
-      ds.forEach((b,i)=>b.onclick=()=>{ go(i); start(); });
-      box.addEventListener('mouseenter',()=>clearInterval(timer)); box.addEventListener('mouseleave',start);
-      if (slides.length<2) box.querySelectorAll('.sl-btn').forEach(b=>b.hidden=true);
-      start();
-      document.getElementById('gal-wrap').hidden=false;
-    }
-    if (!anns.length || !gal.length) document.getElementById('feed-grid').classList.add('one');
+    const G=d.galleries||{loot:gal};
+    const shows=[['gal-wrap',G.loot||gal,5500],['lvl-wrap',G.levels||[],6500],['death-wrap',G.deaths||[],7000]];
+    let anyShow=false;
+    shows.forEach(([id,items,ms])=>{ if (items.length){ makeShow(document.getElementById(id), items, ms); anyShow=true; } });
+    const minis=document.querySelector('.mini-shows');
+    const nMini=[...minis.children].filter(c=>!c.hidden).length;
+    minis.hidden = !nMini; minis.classList.toggle('single', nMini===1);
+    if (!anns.length || !anyShow) document.getElementById('feed-grid').classList.add('one');
+    document.getElementById('gal-col').hidden = !anyShow;
     sec.hidden=false;
   }).catch(()=>{});
 })();
