@@ -143,6 +143,41 @@ blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;b
 .nl-close p{color:#c9c1b9;max-width:640px;margin:10px auto 0}
 .nl-close .cta{font-family:Cinzel,serif;font-weight:800;color:#fff;font-size:1.1rem;margin-top:14px}
 
+/* newsletter: fall theme (swap the .fall class per month) */
+#newsletter.fall{position:relative;overflow:hidden;
+  --amber:#e8873a;--pumpkin:#c8571f;--harvest:#f0b24a;--bark:#2a1a12;
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(200,87,31,.22),transparent 55%),
+    radial-gradient(ellipse at 90% 100%,rgba(179,32,28,.20),transparent 55%),
+    linear-gradient(180deg,#140d0a,#0f0b0a 60%,#120c0a);
+  border-top:1px solid #3a2416}
+#newsletter.fall::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#8e1f17,var(--pumpkin),var(--harvest),var(--pumpkin),#8e1f17)}
+#newsletter.fall .wrap{position:relative;z-index:1}
+.fall .eyebrow{color:var(--amber)}
+.fall h2{color:var(--harvest)}
+.fall .sec-head p{color:#bfae9c}
+.fall .nl{background:linear-gradient(180deg,rgba(42,26,18,.92),rgba(27,20,17,.92));border-color:#4a2e1c;border-top:3px solid var(--pumpkin);box-shadow:0 10px 40px rgba(0,0,0,.45)}
+.fall .nl-ev{border-top:1px dashed #4a2e1c}
+.fall .nl-date{color:var(--amber)}
+.fall .nl-date small{color:#a8927e}
+.fall .nl-meta{color:var(--harvest)}
+.fall .st.soon{border-color:var(--amber);color:var(--harvest)}
+.fall .st.live{background:linear-gradient(180deg,#d9622a,#a8341a);border-color:#e8873a}
+.fall .card{background:linear-gradient(180deg,rgba(38,24,17,.92),rgba(27,20,17,.92));border-color:#4a2e1c}
+.fall .info li{border-bottom-color:#3a2619}
+.fall .info li::before{content:"🍂";font-size:.8rem;top:7px}
+.fall .nl-close{border-color:#5a3520;background:radial-gradient(ellipse at 50% 130%,rgba(232,135,58,.35),transparent 65%),linear-gradient(180deg,#1d1310,#150f0c)}
+.fall .nl-close h3{color:var(--harvest)}
+.leaves{position:absolute;inset:0;pointer-events:none;z-index:0}
+.leaves svg{position:absolute;top:-80px;width:var(--s,40px);height:var(--s,40px);opacity:.7;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5));animation:leaf-fall var(--d,16s) linear var(--dl,0s) infinite}
+@keyframes leaf-fall{
+  0%{transform:translate(0,0) rotate(0deg)}
+  25%{transform:translate(40px,25vh) rotate(90deg)}
+  50%{transform:translate(-30px,55vh) rotate(200deg)}
+  75%{transform:translate(35px,85vh) rotate(280deg)}
+  100%{transform:translate(-10px,130vh) rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.leaves svg{animation:none;top:auto}.leaves svg:nth-child(odd){top:4%}.leaves svg:nth-child(even){bottom:4%}}
+
 /* leadership */
 .role{border-left:3px solid var(--gold);padding-left:14px}
 .values{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
@@ -287,10 +322,12 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
   </div>
 </section>
 
-<section id="newsletter">
+<section id="newsletter" class="fall">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="leaf" viewBox="0 0 64 64"><path d="M32 2 36 13 42 9 41 21 47 17 50 22 60 20 55 30 62 34 50 38 52 46 40 43 36 48 33 45 32 46 31 45 28 48 24 43 12 46 14 38 2 34 9 30 4 20 14 22 17 17 23 21 22 9 28 13Z" fill="currentColor"/><path d="M32 46V8M32 38 52 25M32 38 12 25M32 44 46 41M32 44 18 41" stroke="rgba(0,0,0,.32)" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M32 46 31 62" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol></defs></svg>
+  <div class="leaves" aria-hidden="true"><svg style="left:4%;color:#c8571f;--s:46px;--d:17s;--dl:0s"><use href="#leaf"/></svg><svg style="left:14%;color:#f0b24a;--s:34px;--d:21s;--dl:-6s"><use href="#leaf"/></svg><svg style="left:27%;color:#b3201c;--s:42px;--d:19s;--dl:-12s"><use href="#leaf"/></svg><svg style="left:41%;color:#e8873a;--s:30px;--d:23s;--dl:-3s"><use href="#leaf"/></svg><svg style="left:58%;color:#d6a742;--s:48px;--d:18s;--dl:-9s"><use href="#leaf"/></svg><svg style="left:70%;color:#c8571f;--s:38px;--d:22s;--dl:-15s"><use href="#leaf"/></svg><svg style="left:83%;color:#b3201c;--s:52px;--d:20s;--dl:-5s"><use href="#leaf"/></svg><svg style="left:93%;color:#f0b24a;--s:34px;--d:24s;--dl:-11s"><use href="#leaf"/></svg></div>
   <div class="wrap">
     <div class="sec-head">
-      <div><div class="eyebrow">Clan Newsletter</div><h2>🌅 November 2026</h2></div>
+      <div><div class="eyebrow">Clan Newsletter · Fall Edition</div><h2>🍂 November 2026</h2></div>
       <p>Earn clan points, climb the ranks, and get some PvM in with the RAD community.</p>
     </div>
     <div class="nl">
@@ -340,7 +377,7 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
     </div>
 
     <div class="nl-close">
-      <h3>Let's Make November Count!</h3>
+      <h3>🍁 Let's Make November Count! 🍁</h3>
       <p>Our goal isn't just to chase XP, KC, or drops. It's to build an active community where players of all experience levels can find a team, learn something new, and enjoy the game together.</p>
       <div class="cta">Show up. Get involved. Earn points. Have fun.</div>
       <div style="margin-top:6px;color:var(--gold)">⚔️ Ride at Dawn! 🌅</div>
