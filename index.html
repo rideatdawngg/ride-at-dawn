@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ride at Dawn — OSRS PvM &amp; Variety Clan</title>
+<link rel="icon" href="logo-sm.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0b0b; --bg2:#141212; --panel:#1b1818; --panel2:#221e1d; --line:#352e2b;
+  --red:#b3201c; --red2:#d93a2b; --gold:#d6a742; --gold2:#f2cf72; --gray:#9b938e; --text:#ece6df;
+  --osrs:#ff981f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Barlow,system-ui,sans-serif;font-size:16px;line-height:1.55}
+a{color:var(--gold2);text-decoration:none}
+a:hover{color:#fff}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:Cinzel,serif;letter-spacing:.02em}
+h2{font-size:clamp(1.5rem,3vw,2rem);color:var(--gold2);text-transform:uppercase}
+.eyebrow{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--red2);font-weight:700}
+section{padding:72px 0;border-top:1px solid #1f1b1a}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:28px;flex-wrap:wrap}
+.sec-head p{color:var(--gray);max-width:520px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(12,11,11,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-family:Cinzel,serif;font-weight:900;color:var(--text);font-size:1.15rem}
+.brand img{width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 1px #5a1c18}
+.hero-logo{width:min(440px,78vw);aspect-ratio:1;border-radius:50%;display:block;margin:6px auto 4px;box-shadow:0 0 0 2px rgba(214,167,66,.35),0 0 80px rgba(217,58,43,.55),0 20px 60px rgba(0,0,0,.8)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.raid .time{display:inline-block;margin-top:12px;font-weight:700;color:var(--gold2);font-size:.9rem;letter-spacing:.06em}
+.raid .cd{color:#fff;font-weight:600;font-size:.88rem;margin-top:4px}
+.tbl .item{color:var(--osrs);font-weight:600}
+.links{display:flex;gap:26px;align-items:center}
+.links a{color:var(--text);font-weight:600;font-size:.92rem;text-transform:uppercase;letter-spacing:.08em}
+.links a:hover{color:var(--gold2)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.9rem;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn-red{background:linear-gradient(180deg,var(--red2),var(--red));color:#fff;border-color:#7a1512;box-shadow:0 4px 18px rgba(179,32,28,.35)}
+.btn-red:hover{color:#fff;filter:brightness(1.12)}
+.btn-ghost{border-color:var(--gold);color:var(--gold2);background:rgba(12,11,11,.72)}
+.btn-ghost:hover{background:rgba(214,167,66,.12);color:var(--gold2)}
+.nav-cta{padding:9px 16px}
+.menu-btn{display:none;background:none;border:0;color:var(--text);font-size:1.6rem;cursor:pointer}
+
+/* hero */
+.hero{position:relative;min-height:88vh;display:flex;align-items:center;overflow:hidden;border-top:0}
+.hero-art{position:absolute;inset:0;width:100%;height:100%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,11,11,0) 55%,var(--bg) 100%)}
+.hero .wrap{position:relative;z-index:2;text-align:center;width:100%}
+.hero h1{font-size:clamp(2.8rem,9vw,6.4rem);font-weight:900;line-height:.95;text-transform:uppercase;color:#fff;text-shadow:0 4px 0 #000,0 0 40px rgba(217,58,43,.45)}
+.hero h1 span{color:var(--gold2)}
+.tag{margin:18px auto 8px;font-size:clamp(1rem,2.2vw,1.3rem);font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.motto{font-family:Cinzel,serif;font-size:1.15rem;color:#f5e9d6;opacity:.92;margin-bottom:30px}
+.hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.chip{background:rgba(0,0,0,.55);border:1px solid var(--line);padding:7px 14px;border-radius:30px;font-size:.85rem;font-weight:600}
+.chip b{color:var(--osrs)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--red);border-radius:6px;padding:22px}
+.stat .v{font-family:Cinzel,serif;font-size:2rem;font-weight:800;color:#fff}
+.stat .l{color:var(--gray);font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;font-weight:600}
+.note{color:var(--gray);font-size:.85rem;margin-top:14px}
+
+/* cards */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:24px}
+.card h3{color:#fff;font-size:1.1rem;margin-bottom:8px}
+.card p{color:#c9c1b9;font-size:.95rem}
+.ico{width:44px;height:44px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,#3a1110,#1b0b0a);border:1px solid #5a1c18;font-size:1.35rem;margin-bottom:14px}
+
+/* raids */
+.raid{position:relative;overflow:hidden;border-radius:8px;border:1px solid var(--line);background:linear-gradient(160deg,#2a0f0d,#151110 70%);padding:26px}
+.raid .day{font-family:Cinzel,serif;font-weight:900;font-size:1.7rem;color:var(--gold2);text-transform:uppercase}
+.raid .what{font-size:1.25rem;font-weight:700;color:#fff;margin:4px 0 8px}
+.raid p{color:#c9c1b9;font-size:.92rem}
+.raid .badge{position:absolute;top:16px;right:16px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:4px 10px;border-radius:20px;background:var(--red);color:#fff}
+.raid.next{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 8px 30px rgba(214,167,66,.15)}
+.extra{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+.extra .card{padding:18px}
+.extra h3{font-size:.98rem}
+
+/* ranks */
+.ranks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.rank{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;transition:.2s}
+.rank.hit{border-color:var(--gold);background:#2a2216}
+.shield{width:33px;height:39px;flex:none;image-rendering:pixelated;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+.earn td{padding:9px 0}
+.earn td:last-child{font-family:Cinzel,serif;font-weight:800;color:var(--gold2);font-size:1.05rem}
+.info{list-style:none;margin-top:6px}
+.info li{padding:7px 0 7px 22px;position:relative;color:#c9c1b9;font-size:.95rem;border-bottom:1px solid #26211f}
+.info li::before{content:"◆";position:absolute;left:0;top:8px;color:var(--red2);font-size:.7rem}
+.info b{color:#fff}
+blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;background:#2a2216;font-family:Cinzel,serif;font-weight:800;color:var(--gold2);border-radius:0 6px 6px 0}
+.rank .n{font-weight:700;color:#fff}
+.rank .p{color:var(--gray);font-size:.85rem}
+.checker{margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:20px;align-items:center;background:linear-gradient(135deg,#1f1715,#151212);border:1px solid var(--line);border-radius:10px;padding:26px}
+.checker h3{color:var(--gold2);font-size:1.3rem;margin-bottom:6px}
+.checker p{color:var(--gray);font-size:.92rem}
+.chk-row{display:flex;gap:10px}
+.chk-row input{flex:1;background:#0f0d0d;border:1px solid var(--line);color:#fff;border-radius:4px;padding:12px 14px;font-size:1rem;font-family:inherit;min-width:0}
+.chk-row input:focus{outline:none;border-color:var(--gold)}
+.result{margin-top:14px;min-height:56px}
+.bar{height:10px;border-radius:6px;background:#0f0d0d;border:1px solid var(--line);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--gold));width:0;transition:width .5s}
+.result b{color:var(--gold2)}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:.93rem}
+.tbl th{text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--gray);padding:0 0 10px;border-bottom:1px solid var(--line)}
+.tbl td{padding:10px 0;border-bottom:1px solid #26211f}
+.tbl td:last-child,.tbl th:last-child{text-align:right}
+.tbl .pos{color:var(--gold2);font-weight:700;width:34px}
+.empty{color:var(--gray);font-size:.9rem;padding:16px 0}
+.botw{display:flex;gap:18px;align-items:center}
+.crown{font-size:2.6rem}
+.botw .who{font-family:Cinzel,serif;font-size:1.5rem;color:#fff;font-weight:800}
+
+/* news */
+.news .date{color:var(--red2);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em}
+
+/* leadership */
+.role{border-left:3px solid var(--gold);padding-left:14px}
+.values{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.values span{background:var(--panel2);border:1px solid var(--line);padding:6px 12px;border-radius:4px;font-size:.88rem}
+
+/* join */
+.join{text-align:center;background:radial-gradient(ellipse at 50% 120%,rgba(217,58,43,.35),transparent 60%),var(--bg2)}
+.join h2{font-size:clamp(1.8rem,5vw,3rem);color:#fff}
+.join p{color:#c9c1b9;max-width:620px;margin:12px auto 26px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:880px;margin:0 auto 30px;text-align:left}
+.steps .card b{color:var(--gold2);font-family:Cinzel,serif;font-size:1.4rem;display:block}
+
+footer{padding:34px 0;border-top:1px solid var(--line);color:var(--gray);font-size:.88rem}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
+
+@media (max-width:900px){
+  .stats,.ranks,.extra{grid-template-columns:repeat(2,1fr)}
+  .grid3,.grid2,.checker,.steps{grid-template-columns:minmax(0,1fr)}
+  .stats,.ranks,.extra{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rank{padding:12px;gap:10px}
+  .checker{padding:20px}
+  .links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:#0c0b0b;padding:20px;border-bottom:1px solid var(--line);gap:18px}
+  .links.open{display:flex}
+  .menu-btn{display:block}
+  section{padding:56px 0}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img src="logo-sm.jpg" alt="">
+      Ride at Dawn
+    </a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.links').classList.toggle('open')">☰</button>
+    <div class="links">
+      <a href="#about">About</a>
+      <a href="#events">Events</a>
+      <a href="#ranks">Ranks</a>
+      <a href="#hiscores">Hiscores</a>
+      <a href="#leadership">Leadership</a>
+      <a class="btn btn-red nav-cta" href="https://discord.gg/rideatdawn" target="_blank" rel="noopener">Join</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <svg class="hero-art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#0b0909"/><stop offset=".42" stop-color="#3b0f0c"/><stop offset=".66" stop-color="#a3261a"/><stop offset=".8" stop-color="#e48a35"/><stop offset="1" stop-color="#f6cf74"/>
+      </linearGradient>
+      <radialGradient id="sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3c4"/><stop offset=".55" stop-color="#f6c45a"/><stop offset="1" stop-color="#f6c45a" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#sky)"/>
+    <g opacity=".22" stroke="#f6cf74" stroke-width="3">
+      <line x1="800" y1="700" x2="800" y2="120"/><line x1="800" y1="700" x2="420" y2="170"/><line x1="800" y1="700" x2="1180" y2="170"/>
+      <line x1="800" y1="700" x2="120" y2="380"/><line x1="800" y1="700" x2="1480" y2="380"/><line x1="800" y1="700" x2="250" y2="250"/><line x1="800" y1="700" x2="1350" y2="250"/>
+    </g>
+    <circle cx="800" cy="700" r="330" fill="url(#sun)"/>
+    <circle cx="800" cy="700" r="150" fill="#ffe7a1"/>
+    <path d="M0 640 160 560 300 610 470 500 610 590 760 520 900 600 1060 480 1230 590 1380 530 1600 610V900H0z" fill="#2a0e0b"/>
+    <path d="M0 720 200 650 380 700 560 640 760 700 960 630 1150 700 1350 650 1600 700V900H0z" fill="#170908"/>
+    <path d="M0 800 260 760 520 790 800 750 1080 790 1340 760 1600 790V900H0z" fill="#0c0b0b"/>
+    <!-- banner on hill -->
+    <g transform="translate(1210 470)">
+      <rect x="0" y="0" width="5" height="130" fill="#0c0b0b"/>
+      <path d="M5 4h70l-14 22 14 22H5z" fill="#b3201c"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <div class="eyebrow">Old School RuneScape Clan</div>
+    <h1 class="sr">Ride at Dawn</h1>
+    <img class="hero-logo" src="logo.jpg" alt="Ride at Dawn clan logo">
+    <div class="tag">PvM · Raids · Variety</div>
+    <p class="motto">“No One Rides Alone.”</p>
+    <div class="hero-ctas">
+      <a class="btn btn-red" href="https://discord.gg/rideatdawn" target="_blank" rel="noopener">⚔ Join the Ride</a>
+      <a class="btn btn-ghost" href="#events">Weekly Events</a>
+    </div>
+    <div class="chips">
+      <span class="chip">Home World <b>472</b></span>
+      <span class="chip">All skill levels welcome</span>
+      <span class="chip">Learner raids every week</span>
+      <span class="chip">Eastern Time</span>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">Clan Stats</div><h2>The Ride So Far</h2></div>
+      <p>Pulled live from our Wise Old Man group.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v" id="s-members">—</div><div class="l">Riders</div></div>
+      <div class="stat"><div class="v" id="s-xp">—</div><div class="l">Combined XP</div></div>
+      <div class="stat"><div class="v" id="s-ehb">—</div><div class="l">Combined EHB</div></div>
+      <div class="stat"><div class="v" id="s-maxed">—</div><div class="l">Maxed Members</div></div>
+    </div>
+    <p class="note" id="wom-note">Live stats are loading… If they don't appear, <a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">view the group on Wise Old Man ↗</a></p>
+
+    <div class="sec-head" style="margin-top:64px">
+      <div><div class="eyebrow">Who We Are</div><h2>Ride Together. Rise Together.</h2></div>
+      <p>RAD is a PvM-focused variety clan built on real friendship. Whether you're greenlogging your first raid or chasing a purple, there's a seat at the table and someone ready to teach.</p>
+    </div>
+    <div class="grid3">
+      <div class="card"><div class="ico">🗡️</div><h3>Raids &amp; PvM</h3><p>Weekly ToB, ToA and CoX runs, Boss of the Week, and masses. Experienced raiders and first-timers in the same calls.</p></div>
+      <div class="card"><div class="ico">📜</div><h3>Learner Friendly</h3><p>Dedicated learner groups and patient teachers. Nobody gets kicked for a death — we'd rather explain the mechanic.</p></div>
+      <div class="card"><div class="ico">🏆</div><h3>Competitions</h3><p>SOTW, BOTW, power hours and quarterly clan Bingo with real prizes and balanced teams.</p></div>
+      <div class="card"><div class="ico">🛡️</div><h3>Clan Progression</h3><p>Eight ranks from Trialist to Legend. XP keeps you active — participation ranks you up.</p></div>
+      <div class="card"><div class="ico">🎙️</div><h3>Voice &amp; Community</h3><p>Active Discord with voice channels, event pings, drop shares and plenty of banter between runs.</p></div>
+      <div class="card"><div class="ico">🤝</div><h3>Brotherhood</h3><p>Respect, encouragement and no favoritism. Real life comes first, and the clan will be here when you log back in.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="events">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">Weekly Schedule</div><h2>Raid Nights</h2></div>
+      <p>Every raid night starts at 8:00 PM Eastern. Sign-ups are posted in Discord — learners always encouraged.</p>
+    </div>
+    <div class="grid3" id="raids">
+      <div class="raid" data-dow="2"><span class="badge">Next up</span><div class="day">Tuesday</div><div class="what">Theatre of Blood / Tombs of Amascut</div><p>Alternating ToB and ToA. Teaching runs and normal-mode groups available.</p><div class="time">🕗 8:00 PM ET</div><div class="cd"></div></div>
+      <div class="raid" data-dow="4"><span class="badge">Next up</span><div class="day">Thursday</div><div class="what">Chambers of Xeric</div><p>CoX night — scale up, learn the rooms, and push those KC numbers for BOTW.</p><div class="time">🕗 8:00 PM ET</div><div class="cd"></div></div>
+      <div class="raid" data-dow="5"><span class="badge">Next up</span><div class="day">Friday</div><div class="what">The Fractured Archive</div><p>TFA night — close out the week together. First-timers welcome; we'll walk you through it.</p><div class="time">🕗 8:00 PM ET</div><div class="cd"></div></div>
+    </div>
+    <div class="extra">
+      <div class="card"><h3>👑 Boss of the Week</h3><p>A new boss each week. Most KC gained takes the crown.</p></div>
+      <div class="card"><h3>📈 Skill of the Week</h3><p>Weekly XP race tracked on Wise Old Man.</p></div>
+      <div class="card"><h3>⚡ Power Hours</h3><p>Short, focused group grinds announced in Discord.</p></div>
+      <div class="card"><h3>🎯 Quarterly Bingo</h3><p>Team boards, weekly objectives, and prize pools.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="ranks">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">Clan Progression</div><h2>Rank Breakdown</h2></div>
+      <p>Our progression ranks reward members for participating in events, competitions, and the RAD community.</p>
+    </div>
+    <div class="ranks" id="rank-list"></div>
+
+    <div class="grid2" style="margin-top:22px">
+      <div class="card">
+        <h3>⭐ How to Earn Points</h3>
+        <table class="tbl earn"><tbody>
+          <tr><td>⚔️ Attend a clan event</td><td>5</td></tr>
+          <tr><td>🎉 Host a clan event</td><td>10</td></tr>
+          <tr><td>⛏️ Participate in SOTW</td><td>5</td></tr>
+          <tr><td>💀 Participate in BOTW</td><td>5</td></tr>
+          <tr><td>🥉 Place 3rd in SOTW/BOTW</td><td>+5</td></tr>
+          <tr><td>🥈 Place 2nd in SOTW/BOTW</td><td>+7</td></tr>
+          <tr><td>🥇 Place 1st in SOTW/BOTW</td><td>+10</td></tr>
+          <tr><td>🤝 Make a clear community contribution</td><td>5</td></tr>
+        </tbody></table>
+      </div>
+      <div class="card">
+        <h3>📜 Important Information</h3>
+        <ul class="info">
+          <li>Points are <b>lifetime points</b> and never expire.</li>
+          <li>There is <b>no point decay</b> for taking a break.</li>
+          <li>Rank-ups happen <b>automatically</b> when you reach the required threshold.</li>
+          <li>XP does not increase your progression rank — <b>participation does</b>.</li>
+          <li>Leadership positions are separate from progression ranks.</li>
+        </ul>
+        <blockquote>XP keeps you active. Participation ranks you up.</blockquote>
+        <p style="margin-top:12px">Show up, get involved, help the community, and begin your journey from <b style="color:#fff">Trialist to Legend!</b> 🌅</p>
+      </div>
+    </div>
+
+    <div class="checker">
+      <div>
+        <h3>Rank Checker</h3>
+        <p>Enter your lifetime clan points to see which rank you qualify for and how far you are from the next one.</p>
+      </div>
+      <div>
+        <form class="chk-row" id="chk">
+          <input id="pts" type="number" min="0" inputmode="numeric" placeholder="Your clan points (e.g. 310)">
+          <button class="btn btn-red" type="submit">Check</button>
+        </form>
+        <div class="result" id="res"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hiscores">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">Hiscores</div><h2>Clan Leaderboards</h2></div>
+      <p><a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">Wise Old Man ↗</a> &nbsp;·&nbsp; <a href="https://templeosrs.com/groups/overview.php?id=3818" target="_blank" rel="noopener">TempleOSRS ↗</a></p>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Top XP Gainers — This Month</h3>
+        <table class="tbl"><thead><tr><th>#</th><th>Player</th><th>XP Gained</th></tr></thead><tbody id="t-gained"><tr><td colspan="3" class="empty">Loading from Wise Old Man…</td></tr></tbody></table>
+      </div>
+      <div class="card">
+        <h3>Recent Achievements</h3>
+        <table class="tbl"><thead><tr><th>Player</th><th>Achievement</th><th>Date</th></tr></thead><tbody id="t-ach"><tr><td colspan="3" class="empty">Loading from Wise Old Man…</td></tr></tbody></table>
+      </div>
+      <div class="card" style="grid-column:1/-1">
+        <h3>Recent Collection Logs</h3>
+        <table class="tbl"><thead><tr><th>Player</th><th>Item</th><th>Date</th></tr></thead><tbody id="t-clog"><tr><td colspan="3" class="empty">Loading from TempleOSRS…</td></tr></tbody></table>
+      </div>
+      <div class="card">
+        <h3>Boss of the Week — <span id="botw-boss">Leviathan</span></h3>
+        <div class="botw" style="margin:10px 0 16px">
+          <div class="crown">👑</div>
+          <div><div class="who" id="botw-who">Dawn Thunder</div><div style="color:var(--gray)" id="botw-sub">Current leader · +88 KC</div></div>
+        </div>
+        <table class="tbl"><thead><tr><th>#</th><th>Rider</th><th>KC</th></tr></thead>
+          <tbody id="botw-rows"><tr><td class="pos">1</td><td>Dawn Thunder</td><td>+88</td></tr><tr><td class="pos">2</td><td>CT</td><td>+32</td></tr><tr><td class="pos">3</td><td>cozy gamer</td><td>+1</td></tr></tbody>
+        </table>
+        <p class="note" id="botw-note">Clan total: 121 KC · Ends Nov 16 · <a href="https://wiseoldman.net/competitions/163614" target="_blank" rel="noopener">Full standings ↗</a></p>
+      </div>
+      <div class="card news">
+        <h3>Clan News</h3>
+        <div style="margin-top:12px">
+          <div class="date">October 2026</div>
+          <p style="color:#fff;font-weight:700;margin:2px 0 4px">Billionaire Bingo</p>
+          <p>A full month of three-player team boards celebrating Dawn Thunder reaching <b style="color:var(--gold2)">1 billion total XP</b>. GG to every team that rode out.</p>
+        </div>
+        <div style="margin-top:18px">
+          <div class="date">Every Week</div>
+          <p style="color:#fff;font-weight:700;margin:2px 0 4px">Raid nights are live</p>
+          <p>Tuesday, Thursday and Friday. Check #events in Discord for start times and sign-ups.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="leadership">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">How We Run</div><h2>Leadership</h2></div>
+      <p>Leaders are held to the same standard as every member. Issues are handled privately, fairly, and after hearing both sides.</p>
+    </div>
+    <div class="grid2">
+      <div class="card role"><h3>Leaders</h3><p>Set the direction of the clan and have final say on major decisions.</p></div>
+      <div class="card role"><h3>Council</h3><p>Reviews applications, organizes events, monitors chat and supports leadership.</p></div>
+      <div class="card role"><h3>Raid Leaders</h3><p>Run raid nights, organize learner groups, and teach mechanics.</p></div>
+      <div class="card role"><h3>Chat Moderators</h3><p>Keep clan chat and Discord friendly, welcoming and on track.</p></div>
+    </div>
+    <div class="values">
+      <span>Clan first</span><span>Respect everyone</span><span>No favoritism</span><span>Private corrections</span><span>Hear both sides</span><span>Real life comes first</span>
+    </div>
+  </div>
+</section>
+
+<section class="join" id="join">
+  <div class="wrap">
+    <div class="eyebrow">Recruiting Now</div>
+    <h2>Ready to Ride?</h2>
+    <p>New to raids or a seasoned PvMer, we'd love to have you. Hop in the Discord, say hello, and we'll get you set up.</p>
+    <div class="steps">
+      <div class="card"><b>1</b><h3>Join the Discord</h3><p>Click below and read the welcome channel.</p></div>
+      <div class="card"><b>2</b><h3>Click “Join Clan”</h3><p>Fill out the short application in onboarding.</p></div>
+      <div class="card"><b>3</b><h3>Meet us on W472</h3><p>Get your invite and join your first event.</p></div>
+    </div>
+    <a class="btn btn-red" href="https://discord.gg/rideatdawn" target="_blank" rel="noopener">⚔ Join the Ride</a>
+    <p class="note" style="margin-top:14px">discord.gg/rideatdawn</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><div class="m">No One Rides Alone.</div>© <span id="yr"></span> Ride at Dawn · Old School RuneScape is a trademark of Jagex Ltd. This site is not affiliated with Jagex.</div>
+    <div style="display:flex;gap:18px">
+      <a href="https://discord.gg/rideatdawn" target="_blank" rel="noopener">Discord</a>
+      <a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">Wise Old Man</a>
+      <a href="https://templeosrs.com/groups/overview.php?id=3818" target="_blank" rel="noopener">TempleOSRS</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+document.querySelectorAll('.links a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.links').classList.remove('open')));
+
+/* ---------- Ranks ---------- */
+const RANKS = [
+  {n:'Trialist',p:0},{n:'Scout',p:50},{n:'Adventurer',p:125},{n:'Vanguard',p:225},
+  {n:'Veteran',p:400},{n:'Elite',p:650},{n:'Champion',p:1000},{n:'Legend',p:1500}
+];
+const list = document.getElementById('rank-list');
+list.innerHTML = RANKS.map((r,i)=>`<div class="rank" data-i="${i}"><img class="shield" src="ranks/${r.n.toLowerCase()}.png" alt=""><div><div class="n">${r.n}</div><div class="p">${r.p ? r.p.toLocaleString()+' lifetime pts' : 'Starting rank'}</div></div></div>`).join('');
+
+document.getElementById('chk').addEventListener('submit', e => {
+  e.preventDefault();
+  const v = Math.max(0, parseInt(document.getElementById('pts').value,10) || 0);
+  let i = 0; RANKS.forEach((r,k)=>{ if(v>=r.p) i=k; });
+  document.querySelectorAll('.rank').forEach(el=>el.classList.toggle('hit', +el.dataset.i===i));
+  const cur = RANKS[i], nxt = RANKS[i+1];
+  const res = document.getElementById('res');
+  if(!nxt){ res.innerHTML = `You qualify for <b>${cur.n}</b> — the highest rank in RAD. Legendary. 👑<div class="bar"><i style="width:100%"></i></div>`; return; }
+  const pct = Math.round((v-cur.p)/(nxt.p-cur.p)*100);
+  res.innerHTML = `You qualify for <b>${cur.n}</b>. ${(nxt.p-v).toLocaleString()} more points to reach <b>${nxt.n}</b>.<div class="bar"><i></i></div>`;
+  requestAnimationFrame(()=>res.querySelector('.bar i').style.width = pct+'%');
+});
+
+/* ---------- Next raid + countdown (8:00 PM Eastern) ---------- */
+const RAID_START = 20*60, RAID_LEN = 180; // minutes after midnight ET; treat as live for 3 hours
+function etNow(){
+  try {
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(x=>[x.type,x.value]));
+    return {dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(p.weekday), min:(+p.hour)*60+(+p.minute)};
+  } catch(e){ const d=new Date(); return {dow:d.getDay(),min:d.getHours()*60+d.getMinutes()}; }
+}
+function updateRaids(){
+  const {dow,min} = etNow();
+  const cards = [...document.querySelectorAll('.raid')].map(el=>{
+    let gap = (+el.dataset.dow - dow + 7) % 7;
+    let until = gap*1440 + RAID_START - min;
+    if (until < -RAID_LEN){ until += 7*1440; gap += 7; }
+    return {el,until,gap};
+  }).sort((a,b)=>a.until-b.until);
+  cards.forEach((c,i)=>{
+    c.el.classList.toggle('next', i===0);
+    const b = c.el.querySelector('.badge'), cd = c.el.querySelector('.cd');
+    b.style.display = i===0 ? '' : 'none';
+    cd.textContent = '';
+    if (i!==0) return;
+    if (c.until <= 0){ b.textContent='Live now'; cd.textContent='Raid in progress — hop in voice!'; return; }
+    const d=Math.floor(c.until/1440), h=Math.floor(c.until%1440/60), m=c.until%60;
+    b.textContent = c.gap===0 ? 'Tonight' : c.gap===1 ? 'Tomorrow' : 'Next up';
+    cd.textContent = 'Starts in ' + (d?d+'d ':'') + (h||d?h+'h ':'') + m + 'm';
+  });
+}
+updateRaids(); setInterval(updateRaids, 30000);
+
+/* ---------- TempleOSRS recent collection logs ---------- */
+// Set this to RAD's TempleOSRS group ID once the group is created (e.g. 1234).
+const TEMPLE_GROUP = 3818;
+(function(){
+  const el = document.getElementById('t-clog');
+  if (!TEMPLE_GROUP){
+    el.innerHTML = '<tr><td colspan="3" class="empty">Drop feed coming soon — members sync their collection logs with the TempleOSRS RuneLite plugin.</td></tr>';
+    return;
+  }
+  // Temple blocks direct browser requests, so on Netlify we go through the /temple-api proxy (see _redirects).
+  const path = n => `collection-log/group_recent_items.php?group=${TEMPLE_GROUP}&count=10${n?'&onlynotable=1':''}`;
+  const json = u => fetch(u).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(j=>{ if(j && j.error) return []; if(!j || !j.data) throw 0; return Array.isArray(j.data) ? j.data : Object.values(j.data); });
+  const load = n => json('/temple-api/'+path(n)).catch(()=>json('https://templeosrs.com/api/'+path(n)));
+  // Show notable items first; if none yet, show everything recent.
+  load(true).then(rows => rows.length ? rows : load(false))
+    .then(rows=>{
+      el.innerHTML = rows.length ? rows.map(r=>`<tr><td>${esc(r.player_name_with_capitalization||r.player)}</td><td class="item">${esc(r.name)}</td><td>${r.date_unix?new Date(r.date_unix*1000).toLocaleDateString('en-US',{month:'short',day:'numeric'}):esc(r.date||'')}</td></tr>`).join('') : '<tr><td colspan="3" class="empty">No new collection log items yet.</td></tr>';
+    })
+    .catch(()=>{ el.innerHTML = `<tr><td colspan="3" class="empty">Drop feed unavailable here. <a href="https://templeosrs.com/collection-log/categories.php?group=${TEMPLE_GROUP}" target="_blank" rel="noopener">See it on TempleOSRS ↗</a></td></tr>`; });
+})();
+
+/* ---------- Wise Old Man live data ---------- */
+const WOM = 'https://api.wiseoldman.net/v2/groups/16463';
+const fmt = n => n>=1e9 ? (n/1e9).toFixed(2)+'B' : n>=1e6 ? (n/1e6).toFixed(1)+'M' : n>=1e3 ? (n/1e3).toFixed(1)+'K' : Math.round(n).toString();
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const get = u => fetch(u).then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); });
+
+(async function(){
+  const note = document.getElementById('wom-note');
+  const failMsg = '<tr><td colspan="3" class="empty">Live data unavailable here. <a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">See it on Wise Old Man ↗</a></td></tr>';
+  try {
+    const g = await get(WOM);
+    const ms = g.memberships || [];
+    document.getElementById('s-members').textContent = (g.memberCount ?? ms.length).toLocaleString();
+    document.getElementById('s-xp').textContent = fmt(ms.reduce((a,m)=>a+(m.player?.exp||0),0));
+    document.getElementById('s-ehb').textContent = Math.round(ms.reduce((a,m)=>a+(m.player?.ehb||0),0)).toLocaleString();
+    note.innerHTML = 'Live from <a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">Wise Old Man ↗</a>';
+    get(WOM+'/statistics').then(s=>{ document.getElementById('s-maxed').textContent = (s.maxedTotalCount ?? 0).toLocaleString(); }).catch(()=>{});
+    get(WOM+'/gained?metric=overall&period=month&limit=10').then(rows=>{
+      rows = [...rows].sort((a,b)=>b.data.gained-a.data.gained).slice(0,10);
+      document.getElementById('t-gained').innerHTML = rows.length ? rows.map((r,i)=>`<tr><td class="pos">${i+1}</td><td>${esc(r.player.displayName)}</td><td>${fmt(r.data.gained)}</td></tr>`).join('') : '<tr><td colspan="3" class="empty">No gains yet this month.</td></tr>';
+    }).catch(()=>document.getElementById('t-gained').innerHTML=failMsg);
+    get(WOM+'/achievements?limit=8').then(rows=>{
+      document.getElementById('t-ach').innerHTML = rows.length ? rows.map(r=>`<tr><td>${esc(r.player.displayName)}</td><td>${esc(r.name)}</td><td>${new Date(r.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td></tr>`).join('') : '<tr><td colspan="3" class="empty">No recent achievements.</td></tr>';
+    }).catch(()=>document.getElementById('t-ach').innerHTML=failMsg);
+  } catch(e) {
+    note.innerHTML = 'Live stats appear once this site is hosted on its own domain. In the meantime, <a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">view the group on Wise Old Man ↗</a>';
+    document.getElementById('t-gained').innerHTML = failMsg;
+    document.getElementById('t-ach').innerHTML = failMsg;
+  }
+})();
+
+/* ---------- Live Boss of the Week (ongoing WOM competition) ---------- */
+(async function(){
+  try {
+    const comps = await get(WOM+'/competitions?limit=50');
+    const now = Date.now();
+    const live = comps.filter(c=>/boss of the week/i.test(c.title) && new Date(c.startsAt)<=now && new Date(c.endsAt)>now)
+                      .sort((a,b)=>new Date(b.startsAt)-new Date(a.startsAt))[0];
+    if (!live) return;
+    const c = await get('https://api.wiseoldman.net/v2/competitions/'+live.id);
+    const ps = (c.participations||[]).filter(p=>p.progress?.gained>0).sort((a,b)=>b.progress.gained-a.progress.gained);
+    const boss = live.title.replace(/\s*-\s*boss of the week/i,'').trim();
+    const total = ps.reduce((a,p)=>a+p.progress.gained,0);
+    const ends = new Date(live.endsAt).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    document.getElementById('botw-boss').textContent = boss;
+    document.getElementById('botw-who').textContent = ps[0] ? ps[0].player.displayName : 'Up for grabs';
+    document.getElementById('botw-sub').textContent = ps[0] ? `Current leader · +${ps[0].progress.gained} KC` : 'No kills logged yet — be the first!';
+    document.getElementById('botw-rows').innerHTML = ps.length ? ps.slice(0,10).map((p,i)=>`<tr><td class="pos">${i+1}</td><td>${esc(p.player.displayName)}</td><td>+${p.progress.gained}</td></tr>`).join('') : '<tr><td colspan="3" class="empty">No kills logged yet.</td></tr>';
+    document.getElementById('botw-note').innerHTML = `Clan total: ${total} KC · Ends ${ends} · <a href="https://wiseoldman.net/competitions/${live.id}" target="_blank" rel="noopener">Full standings ↗</a>`;
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>
