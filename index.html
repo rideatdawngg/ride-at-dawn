@@ -14,6 +14,7 @@
   --osrs:#ff981f;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:Barlow,system-ui,sans-serif;font-size:16px;line-height:1.55}
 a{color:var(--gold2);text-decoration:none}
@@ -111,6 +112,27 @@ blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;b
 .bar{height:10px;border-radius:6px;background:#0f0d0d;border:1px solid var(--line);overflow:hidden;margin-top:8px}
 .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--gold));width:0;transition:width .5s}
 .result b{color:var(--gold2)}
+
+/* points standings */
+.pts-board{margin-top:22px}
+.pts-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.pts-head h3{color:var(--gold2);font-size:1.3rem;margin-bottom:2px}
+.pts-head .note{margin-top:0}
+.pts-head input{background:#0f0d0d;border:1px solid var(--line);color:#fff;border-radius:4px;padding:10px 12px;font-size:.95rem;font-family:inherit;width:min(260px,100%)}
+.pts-head input:focus{outline:none;border-color:var(--gold)}
+.pts-sum{display:flex;gap:18px;flex-wrap:wrap;color:var(--gray);font-size:.85rem;margin-bottom:8px}
+.pts-sum b{color:#fff}
+.pts td{vertical-align:middle}
+.pts .who{font-weight:700;color:#fff}
+.pts .rk{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.pts .rk img{width:20px;height:24px;image-rendering:pixelated}
+.pts .prog{min-width:150px}
+.pts .prog .bar{margin-top:0;height:8px}
+.pts .prog small{color:var(--gray);font-size:.78rem}
+.pts td:last-child{font-family:Cinzel,serif;font-weight:800;color:var(--gold2);font-size:1.05rem}
+.pts tr.me td{background:#2a2216}
+.pts-foot{display:flex;justify-content:center;margin-top:16px}
+@media (max-width:640px){.pts .prog,.pts th.prog-h{display:none}}
 
 /* tables */
 .tbl{width:100%;border-collapse:collapse;font-size:.93rem}
@@ -434,6 +456,18 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
         <div class="result" id="res"></div>
       </div>
     </div>
+
+    <div class="card pts-board" id="standings" hidden>
+      <div class="pts-head">
+        <div><h3>🏅 Clan Points Standings</h3><p class="note">Lifetime points for every rider, pulled live from the RAD points tracker.</p></div>
+        <input id="pts-search" type="search" placeholder="Find your RSN…" aria-label="Find your RSN">
+      </div>
+      <div class="pts-sum" id="pts-sum"></div>
+      <table class="tbl pts"><thead><tr><th>#</th><th>Rider</th><th>Rank</th><th class="prog-h">Next Rank</th><th>Points</th></tr></thead>
+        <tbody id="pts-rows"><tr><td colspan="5" class="empty">Loading points…</td></tr></tbody>
+      </table>
+      <div class="pts-foot"><button class="btn btn-ghost" id="pts-more" type="button" hidden>Show all riders</button></div>
+    </div>
   </div>
 </section>
 
@@ -608,6 +642,38 @@ function updateNewsletter(){
   });
 }
 updateNewsletter(); setInterval(updateNewsletter, 600000);
+
+/* ---------- Clan points standings (served by /api/points; only RSN + points) ---------- */
+(function(){
+  const body=document.getElementById('pts-rows'), more=document.getElementById('pts-more'),
+        search=document.getElementById('pts-search'), sum=document.getElementById('pts-sum'), board=document.getElementById('standings');
+  let riders=[], showAll=false;
+  const rankFor = p => { let i=0; RANKS.forEach((r,k)=>{ if(p>=r.p) i=k; }); return i; };
+  function render(){
+    const term=search.value.trim().toLowerCase();
+    let list = term ? riders.filter(r=>r.name.toLowerCase().includes(term)) : (showAll ? riders : riders.filter(r=>r.pts>0));
+    more.hidden = !!term || riders.every(r=>r.pts>0);
+    more.textContent = showAll ? 'Show riders with points only' : 'Show all riders';
+    if (!list.length){ body.innerHTML='<tr><td colspan="5" class="empty">'+(term?'No rider found with that name.':'No points awarded yet.')+'</td></tr>'; return; }
+    body.innerHTML = list.map(r=>{
+      const cur=RANKS[r.ri], nxt=RANKS[r.ri+1];
+      const pct = nxt ? Math.round((r.pts-cur.p)/(nxt.p-cur.p)*100) : 100;
+      const prog = nxt ? `<div class="bar"><i style="width:${pct}%"></i></div><small>${(nxt.p-r.pts).toLocaleString()} to ${nxt.n}</small>` : '<small>Highest rank 👑</small>';
+      return `<tr class="${term&&r.name.toLowerCase()===term?'me':''}"><td class="pos">${r.pos}</td><td class="who">${esc(r.name)}</td><td><span class="rk"><img src="ranks/${cur.n.toLowerCase()}.png" alt="">${cur.n}</span></td><td class="prog">${prog}</td><td>${r.pts.toLocaleString()}</td></tr>`;
+    }).join('');
+  }
+  fetch('/api/points').then(r=>{ if(!r.ok) throw r.status; return r.json(); }).then(d=>{
+    riders = (d.riders||[]).slice().sort((a,b)=>b.pts-a.pts || a.name.localeCompare(b.name));
+    if (!riders.length) throw 0;
+    riders.forEach((r,i)=>{ r.ri=rankFor(r.pts); r.pos = i && riders[i-1].pts===r.pts ? riders[i-1].pos : i+1; });
+    const active=riders.filter(r=>r.pts>0), total=riders.reduce((a,r)=>a+r.pts,0);
+    sum.innerHTML = `<span><b>${active.length}</b> riders on the board</span><span><b>${total.toLocaleString()}</b> total clan points</span><span>Top rider: <b>${esc(riders[0].name)}</b></span>`;
+    board.hidden = false;
+    render();
+  }).catch(()=>{ board.hidden = true; });
+  more.addEventListener('click',()=>{ showAll=!showAll; render(); });
+  search.addEventListener('input',render);
+})();
 
 /* ---------- TempleOSRS recent collection logs ---------- */
 // Set this to RAD's TempleOSRS group ID once the group is created (e.g. 1234).
