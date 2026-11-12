@@ -218,21 +218,19 @@ blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;b
 .dots{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap;min-height:9px}
 .dots button{width:9px;height:9px;border-radius:50%;border:0;background:#3a3330;cursor:pointer;padding:0}
 .dots button.on{background:var(--gold)}
-.mini-shows{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
-.mini-shows.single{grid-template-columns:1fr}
-.slides.mini{aspect-ratio:4/3}
-.slides.mini .cap{padding:26px 12px 10px;font-size:.82rem}
-.slides.mini .sl-btn{width:32px;height:32px;font-size:1.1rem}
-@media (max-width:560px){.mini-shows{grid-template-columns:1fr}}
+.mini-shows{display:block}
+#gal-col .mini-shows .show{margin-top:22px}
+.ann-scroll{position:relative}
 @media (min-width:901px){
-  /* Left column stretches to the announcements' height; slideshows grow to fill it. */
+  /* Three equal slideshows set the height; announcements fill that height and scroll if needed. */
   .feed-grid:not(.one){align-items:stretch}
-  .feed-grid:not(.one) #gal-col{display:flex;flex-direction:column}
-  .feed-grid:not(.one) #gal-wrap{flex:3 1 0;display:flex;flex-direction:column;min-height:0}
-  .feed-grid:not(.one) #gal-wrap .slides{flex:1 1 auto;aspect-ratio:auto;min-height:300px}
-  .feed-grid:not(.one) .mini-shows{flex:2 1 0;grid-template-rows:minmax(0,1fr)}
-  .feed-grid:not(.one) .mini-shows .show{display:flex;flex-direction:column;min-height:0}
-  .feed-grid:not(.one) .mini-shows .slides{flex:1 1 auto;aspect-ratio:auto;min-height:190px}
+  .feed-grid:not(.one) #ann-wrap{display:flex;flex-direction:column}
+  .feed-grid:not(.one) .ann-scroll{flex:1 1 auto;min-height:300px}
+  .feed-grid:not(.one) #ann-list{position:absolute;inset:0;overflow-y:auto;padding-right:6px;scrollbar-width:thin;scrollbar-color:#4a3f3a transparent}
+  .feed-grid:not(.one) .ann .txt{max-height:none}
+  .feed-grid:not(.one) .ann .txt.long::after{display:none}
+  .feed-grid:not(.one) .ann img{max-height:200px}
+  .feed-grid:not(.one) .ann-scroll.more::after{content:"Scroll for more ↓";position:absolute;left:0;right:6px;bottom:0;height:70px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);background:linear-gradient(180deg,transparent,var(--bg) 85%);pointer-events:none}
 }
 .feed-label{font-family:Cinzel,serif;font-weight:800;color:#fff;font-size:1.1rem;margin-bottom:10px}
 .ann{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:8px;padding:16px 18px;margin-bottom:12px}
@@ -411,19 +409,19 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
         <div class="mini-shows">
           <div id="lvl-wrap" class="show" hidden>
             <div class="feed-label">📈 Level Ups</div>
-            <div class="slides mini" aria-roledescription="carousel"><button class="sl-btn sl-prev" type="button" aria-label="Previous">‹</button><button class="sl-btn sl-next" type="button" aria-label="Next">›</button></div>
+            <div class="slides" aria-roledescription="carousel"><button class="sl-btn sl-prev" type="button" aria-label="Previous">‹</button><button class="sl-btn sl-next" type="button" aria-label="Next">›</button></div>
             <div class="dots"></div>
           </div>
           <div id="death-wrap" class="show" hidden>
             <div class="feed-label">💀 Deaths Coffer</div>
-            <div class="slides mini" aria-roledescription="carousel"><button class="sl-btn sl-prev" type="button" aria-label="Previous">‹</button><button class="sl-btn sl-next" type="button" aria-label="Next">›</button></div>
+            <div class="slides" aria-roledescription="carousel"><button class="sl-btn sl-prev" type="button" aria-label="Previous">‹</button><button class="sl-btn sl-next" type="button" aria-label="Next">›</button></div>
             <div class="dots"></div>
           </div>
         </div>
       </div>
       <div id="ann-wrap" hidden>
         <div class="feed-label">📣 Announcements</div>
-        <div id="ann-list"></div>
+        <div class="ann-scroll"><div id="ann-list"></div></div>
       </div>
     </div>
   </div>
@@ -811,6 +809,9 @@ updateNewsletter(); setInterval(updateNewsletter, 600000);
     if (anns.length){
       document.getElementById('ann-list').innerHTML = anns.map(a=>`<div class="ann"><div class="date">${when(a.date)} · ${esc(a.author)}</div><div class="txt${a.text.length>380?' long':''}">${md(a.text)}</div>${a.image?`<img src="${esc(a.image)}" alt="" loading="lazy">`:''}<a class="more" href="${esc(a.link)}" target="_blank" rel="noopener">Read in Discord →</a></div>`).join('');
       document.getElementById('ann-wrap').hidden=false;
+      const sc=document.querySelector('.ann-scroll'), list=document.getElementById('ann-list');
+      const fade=()=>sc.classList.toggle('more', list.scrollHeight-list.scrollTop-list.clientHeight>24);
+      list.addEventListener('scroll',fade); addEventListener('resize',fade); setTimeout(fade,300); list.querySelectorAll('img').forEach(i=>i.addEventListener('load',fade));
     }
     const G=d.galleries||{loot:gal};
     const shows=[['gal-wrap',G.loot||gal,5500],['lvl-wrap',G.levels||[],6500],['death-wrap',G.deaths||[],7000]];
@@ -818,7 +819,7 @@ updateNewsletter(); setInterval(updateNewsletter, 600000);
     shows.forEach(([id,items,ms])=>{ if (items.length){ makeShow(document.getElementById(id), items, ms); anyShow=true; } });
     const minis=document.querySelector('.mini-shows');
     const nMini=[...minis.children].filter(c=>!c.hidden).length;
-    minis.hidden = !nMini; minis.classList.toggle('single', nMini===1);
+    minis.hidden = !nMini;
     if (!anns.length || !anyShow) document.getElementById('feed-grid').classList.add('one');
     document.getElementById('gal-col').hidden = !anyShow;
     sec.hidden=false;
