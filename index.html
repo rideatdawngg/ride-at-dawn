@@ -32,8 +32,10 @@ section{padding:72px 0;border-top:1px solid #1f1b1a}
 nav{position:sticky;top:0;z-index:50;background:rgba(12,11,11,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
 .brand{display:flex;align-items:center;gap:10px;font-family:Cinzel,serif;font-weight:900;color:var(--text);font-size:1.15rem}
-.brand img,.brand video{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#000;box-shadow:0 0 0 1px #5a1c18}
-.hero-logo{width:min(440px,78vw);aspect-ratio:1;border-radius:50%;display:block;object-fit:cover;background:#000;margin:6px auto 4px;box-shadow:0 0 0 2px rgba(214,167,66,.35),0 0 80px rgba(217,58,43,.55),0 20px 60px rgba(0,0,0,.8)}
+.brand img,.brand video{width:42px;height:42px;object-fit:cover;-webkit-mask-image:url(logo-mask.png);mask-image:url(logo-mask.png);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.hero-logo-wrap{position:relative;width:min(460px,80vw);margin:6px auto 4px}
+.hero-logo-wrap::before{content:"";position:absolute;inset:4%;border-radius:50%;box-shadow:0 0 80px rgba(217,58,43,.55),0 20px 60px rgba(0,0,0,.8);pointer-events:none}
+.hero-logo{position:relative;width:100%;aspect-ratio:1;display:block;object-fit:cover;-webkit-mask-image:url(logo-mask.png);mask-image:url(logo-mask.png);-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .raid .time{display:inline-block;margin-top:12px;font-weight:700;color:var(--gold2);font-size:.9rem;letter-spacing:.06em}
 .raid .cd{color:#fff;font-weight:600;font-size:.88rem;margin-top:4px}
@@ -336,10 +338,12 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
   <div class="wrap">
     <div class="eyebrow">Old School RuneScape Clan</div>
     <h1 class="sr">Ride at Dawn</h1>
-    <video class="hero-logo" id="hero-logo" data-anim autoplay muted loop playsinline preload="auto" poster="logo-anim.jpg" role="img" aria-label="Ride at Dawn clan logo">
-      <source src="logo-anim.webm" type="video/webm">
-      <source src="logo-anim.mp4" type="video/mp4">
-    </video>
+    <div class="hero-logo-wrap">
+      <video class="hero-logo" id="hero-logo" data-anim autoplay muted loop playsinline preload="auto" poster="logo-anim.jpg" role="img" aria-label="Ride at Dawn clan logo">
+        <source src="logo-anim.webm" type="video/webm">
+        <source src="logo-anim.mp4" type="video/mp4">
+      </video>
+    </div>
     <div class="tag">PvM · Raids · Variety</div>
     <p class="hook"><span>Tired of gaming alone?</span> <span>Want to learn PvM and raids?</span></p>
     <p class="motto">Ride at Dawn. <span>No One Rides Alone.</span></p>
@@ -697,11 +701,12 @@ document.getElementById('yr').textContent = new Date().getFullYear();
   if (!src || !link || mq.matches) return;
   const c=document.createElement('canvas'); c.width=c.height=64;
   const ctx=c.getContext('2d'); let ok=true;
+  const mask=new Image(); mask.src='logo-mask.png';
   setInterval(()=>{
     if (!ok || document.hidden || src.paused || src.readyState<2) return;
     try {
-      ctx.clearRect(0,0,64,64); ctx.save(); ctx.beginPath(); ctx.arc(32,32,32,0,Math.PI*2); ctx.clip();
-      ctx.drawImage(src,0,0,64,64); ctx.restore();
+      ctx.globalCompositeOperation='source-over'; ctx.clearRect(0,0,64,64); ctx.drawImage(src,0,0,64,64);
+      if (mask.complete){ ctx.globalCompositeOperation='destination-in'; ctx.drawImage(mask,0,0,64,64); }
       link.href=c.toDataURL('image/png');
     } catch(e){ ok=false; link.href='favicon.png'; }
   },120);
