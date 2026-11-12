@@ -32,7 +32,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(12,11,11,.88);backdrop-filt
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
 .brand{display:flex;align-items:center;gap:10px;font-family:Cinzel,serif;font-weight:900;color:var(--text);font-size:1.15rem}
 .brand img{width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 1px #5a1c18}
-.hero-logo{width:min(440px,78vw);aspect-ratio:1;border-radius:50%;display:block;margin:6px auto 4px;box-shadow:0 0 0 2px rgba(214,167,66,.35),0 0 80px rgba(217,58,43,.55),0 20px 60px rgba(0,0,0,.8)}
+.hero-logo{width:min(440px,78vw);aspect-ratio:1;border-radius:50%;display:block;object-fit:cover;background:#000;margin:6px auto 4px;box-shadow:0 0 0 2px rgba(214,167,66,.35),0 0 80px rgba(217,58,43,.55),0 20px 60px rgba(0,0,0,.8)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .raid .time{display:inline-block;margin-top:12px;font-weight:700;color:var(--gold2);font-size:.9rem;letter-spacing:.06em}
 .raid .cd{color:#fff;font-weight:600;font-size:.88rem;margin-top:4px}
@@ -332,7 +332,10 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
   <div class="wrap">
     <div class="eyebrow">Old School RuneScape Clan</div>
     <h1 class="sr">Ride at Dawn</h1>
-    <img class="hero-logo" src="logo.jpg" alt="Ride at Dawn clan logo">
+    <video class="hero-logo" id="hero-logo" autoplay muted loop playsinline preload="auto" poster="logo-anim.jpg" role="img" aria-label="Ride at Dawn clan logo">
+      <source src="logo-anim.webm" type="video/webm">
+      <source src="logo-anim.mp4" type="video/mp4">
+    </video>
     <div class="tag">PvM · Raids · Variety</div>
     <p class="hook"><span>Tired of gaming alone?</span> <span>Want to learn PvM and raids?</span></p>
     <p class="motto">Ride at Dawn. <span>No One Rides Alone.</span></p>
@@ -678,6 +681,13 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
 
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
+/* Animated hero logo: hold on the first frame for visitors who prefer reduced motion. */
+(function(){
+  const v=document.getElementById('hero-logo'); if(!v) return;
+  const mq=matchMedia('(prefers-reduced-motion: reduce)');
+  const apply=()=>{ if(mq.matches){ v.pause(); v.currentTime=0; v.removeAttribute('autoplay'); } else { v.play().catch(()=>{}); } };
+  apply(); mq.addEventListener && mq.addEventListener('change',apply);
+})();
 document.querySelectorAll('.links a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.links').classList.remove('open')));
 
 /* ---------- Ranks ---------- */
