@@ -770,7 +770,7 @@ updateNewsletter(); setInterval(updateNewsletter, 600000);
     }
     if (gal.length){
       const box=document.getElementById('slides'), dots=document.getElementById('dots');
-      box.insertAdjacentHTML('afterbegin', gal.map((g,i)=>`<figure class="slide${i?'':' on'}"><img src="${esc(g.url)}" alt="${esc(g.caption||'Loot screenshot')}" ${i?'loading="lazy"':''}><figcaption class="cap">${g.caption?`<b>${esc(g.caption)}</b>`:''}<small>${esc(g.author)} · ${when(g.date)}</small></figcaption></figure>`).join(''));
+      box.insertAdjacentHTML('afterbegin', gal.map((g,i)=>`<figure class="slide${i?'':' on'}"><img src="${esc(g.url)}" alt="${esc(g.caption||'Loot screenshot')}" ${i?'loading="lazy"':''}><figcaption class="cap">${g.caption?`<b>${esc(g.caption)}</b>`:''}<small>${g.author?esc(g.author)+' · ':''}${when(g.date)}</small></figcaption></figure>`).join(''));
       dots.innerHTML = gal.map((_,i)=>`<button type="button" aria-label="Slide ${i+1}" class="${i?'':'on'}"></button>`).join('');
       const slides=[...box.querySelectorAll('.slide')], ds=[...dots.children];
       let cur=0, timer;

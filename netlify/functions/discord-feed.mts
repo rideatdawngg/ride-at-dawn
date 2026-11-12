@@ -11,7 +11,7 @@ const IMG = /\.(png|jpe?g|gif|webp)(\?|$)/i;
 
 type Att = { url: string; content_type?: string; filename?: string; width?: number; height?: number };
 type Emb = { title?: string; description?: string; image?: { url?: string }; thumbnail?: { url?: string }; author?: { name?: string } };
-type Msg = { id: string; content: string; timestamp: string; author: { username: string; global_name?: string | null; bot?: boolean };
+type Msg = { id: string; webhook_id?: string; content: string; timestamp: string; author: { username: string; global_name?: string | null; bot?: boolean };
              attachments?: Att[]; embeds?: Emb[]; member?: { nick?: string | null } };
 
 async function messages(channel: string, token: string): Promise<Msg[]> {
@@ -68,7 +68,7 @@ export default async () => {
   if (galId) {
     try {
       const ms = await messages(galId, token);
-      const seen = new Set<string>();
+      const seen = new Set<string>(), caps = new Set<string>();
       for (const m of ms) {
         const e = (m.embeds || [])[0];
         const caption = clean(e?.title || e?.description || m.content || "").replace(/[*_`>#]/g, "").split("\n")[0].slice(0, 140);
@@ -76,11 +76,16 @@ export default async () => {
           ...(m.attachments || []).filter(a => (a.content_type || "").startsWith("image/") || IMG.test(a.filename || "")).map(a => a.url),
           ...(m.embeds || []).map(x => x.image?.url).filter((u): u is string => !!u && /^https:/.test(u)),
         ];
+        // Skip repeat drops (same caption) so the slideshow stays varied.
+        if (caption && caps.has(caption.toLowerCase())) continue;
+        if (caption) caps.add(caption.toLowerCase());
+        // Loot bots/webhooks already name the player in the caption, so don't credit the bot.
+        const author = m.webhook_id || m.author.bot ? "" : who(m);
         for (const url of urls) {
           const key = url.split("?")[0];
           if (seen.has(key)) continue;
           seen.add(key);
-          out.gallery.push({ url, caption, author: who(m), date: m.timestamp });
+          out.gallery.push({ url, caption, author, date: m.timestamp });
         }
         if (out.gallery.length >= 15) break;
       }
