@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ride at Dawn — OSRS PvM &amp; Variety Clan</title>
-<link rel="icon" href="logo-sm.jpg">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -31,7 +32,7 @@ section{padding:72px 0;border-top:1px solid #1f1b1a}
 nav{position:sticky;top:0;z-index:50;background:rgba(12,11,11,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
 .brand{display:flex;align-items:center;gap:10px;font-family:Cinzel,serif;font-weight:900;color:var(--text);font-size:1.15rem}
-.brand img{width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 1px #5a1c18}
+.brand img,.brand video{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#000;box-shadow:0 0 0 1px #5a1c18}
 .hero-logo{width:min(440px,78vw);aspect-ratio:1;border-radius:50%;display:block;object-fit:cover;background:#000;margin:6px auto 4px;box-shadow:0 0 0 2px rgba(214,167,66,.35),0 0 80px rgba(217,58,43,.55),0 20px 60px rgba(0,0,0,.8)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .raid .time{display:inline-block;margin-top:12px;font-weight:700;color:var(--gold2);font-size:.9rem;letter-spacing:.06em}
@@ -289,7 +290,10 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
 <nav>
   <div class="wrap">
     <a class="brand" href="#top">
-      <img src="logo-sm.jpg" alt="">
+      <video class="brand-logo" data-anim autoplay muted loop playsinline preload="auto" poster="logo-anim-sm.jpg" aria-hidden="true">
+        <source src="logo-anim-sm.webm" type="video/webm">
+        <source src="logo-anim-sm.mp4" type="video/mp4">
+      </video>
       Ride at Dawn
     </a>
     <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.links').classList.toggle('open')">☰</button>
@@ -332,7 +336,7 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
   <div class="wrap">
     <div class="eyebrow">Old School RuneScape Clan</div>
     <h1 class="sr">Ride at Dawn</h1>
-    <video class="hero-logo" id="hero-logo" autoplay muted loop playsinline preload="auto" poster="logo-anim.jpg" role="img" aria-label="Ride at Dawn clan logo">
+    <video class="hero-logo" id="hero-logo" data-anim autoplay muted loop playsinline preload="auto" poster="logo-anim.jpg" role="img" aria-label="Ride at Dawn clan logo">
       <source src="logo-anim.webm" type="video/webm">
       <source src="logo-anim.mp4" type="video/mp4">
     </video>
@@ -681,12 +685,26 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
 
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
-/* Animated hero logo: hold on the first frame for visitors who prefer reduced motion. */
+/* Animated logos: hold on the first frame for visitors who prefer reduced motion. */
 (function(){
-  const v=document.getElementById('hero-logo'); if(!v) return;
+  const vids=[...document.querySelectorAll('video[data-anim]')];
   const mq=matchMedia('(prefers-reduced-motion: reduce)');
-  const apply=()=>{ if(mq.matches){ v.pause(); v.currentTime=0; v.removeAttribute('autoplay'); } else { v.play().catch(()=>{}); } };
+  const apply=()=>vids.forEach(v=>{ if(mq.matches){ v.pause(); v.currentTime=0; } else { v.play().catch(()=>{}); } });
   apply(); mq.addEventListener && mq.addEventListener('change',apply);
+
+  /* Animated browser-tab icon: draws the menu-bar logo video into the favicon (Chrome, Edge, Firefox). */
+  const src=document.querySelector('.brand-logo'), link=document.querySelector('link[rel="icon"]');
+  if (!src || !link || mq.matches) return;
+  const c=document.createElement('canvas'); c.width=c.height=64;
+  const ctx=c.getContext('2d'); let ok=true;
+  setInterval(()=>{
+    if (!ok || document.hidden || src.paused || src.readyState<2) return;
+    try {
+      ctx.clearRect(0,0,64,64); ctx.save(); ctx.beginPath(); ctx.arc(32,32,32,0,Math.PI*2); ctx.clip();
+      ctx.drawImage(src,0,0,64,64); ctx.restore();
+      link.href=c.toDataURL('image/png');
+    } catch(e){ ok=false; link.href='favicon.png'; }
+  },120);
 })();
 document.querySelectorAll('.links a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.links').classList.remove('open')));
 
