@@ -54,8 +54,8 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .hero .wrap{position:relative;z-index:2;text-align:center;width:100%}
 .hero h1{font-size:clamp(2.8rem,9vw,6.4rem);font-weight:900;line-height:.95;text-transform:uppercase;color:#fff;text-shadow:0 4px 0 #000,0 0 40px rgba(217,58,43,.45)}
 .hero h1 span{color:var(--gold2)}
-.tag{margin:18px auto 8px;font-size:clamp(1rem,2.2vw,1.3rem);font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
-.motto{font-family:Cinzel,serif;font-size:1.15rem;color:#f5e9d6;opacity:.92;margin-bottom:30px}
+.tag{display:inline-block;margin:18px auto 10px;padding:8px 10px 8px 22px;font-size:clamp(.95rem,2.2vw,1.25rem);font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold2);background:rgba(12,11,11,.82);border:1px solid rgba(214,167,66,.55);border-radius:4px;box-shadow:0 6px 24px rgba(0,0,0,.55);text-shadow:0 1px 2px #000}
+.motto{font-family:Cinzel,serif;font-size:1.15rem;color:#fff;margin-bottom:30px;text-shadow:0 1px 3px #000,0 0 14px rgba(0,0,0,.85)}
 .hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 .chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
 .chip{background:rgba(0,0,0,.55);border:1px solid var(--line);padding:7px 14px;border-radius:30px;font-size:.85rem;font-weight:600}
@@ -126,6 +126,23 @@ blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;b
 /* news */
 .news .date{color:var(--red2);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em}
 
+/* newsletter */
+.nl{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--red);border-radius:8px;padding:28px}
+.nl-intro{color:#d8d0c7;font-size:1.02rem;max-width:760px;margin-bottom:18px}
+.nl-ev{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:18px;align-items:center;padding:16px 0;border-top:1px solid #2a2422}
+.nl-date{font-family:Cinzel,serif;font-weight:800;color:var(--gold2);font-size:1.05rem;line-height:1.2}
+.nl-date small{display:block;font-family:Barlow,sans-serif;font-weight:600;color:var(--gray);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+.nl-ev h3{color:#fff;font-size:1.08rem;margin-bottom:3px}
+.nl-ev p{color:#c9c1b9;font-size:.93rem}
+.nl-meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;font-size:.85rem;font-weight:600;color:var(--gold)}
+.st{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 11px;border-radius:20px;white-space:nowrap;border:1px solid var(--line);color:var(--gray);background:#141111}
+.st.live{background:var(--red);border-color:var(--red2);color:#fff}
+.st.soon{border-color:var(--gold);color:var(--gold2)}
+.nl-close{margin-top:20px;text-align:center;padding:30px 20px;border-radius:8px;border:1px solid var(--line);background:radial-gradient(ellipse at 50% 130%,rgba(217,58,43,.3),transparent 65%),var(--bg2)}
+.nl-close h3{font-size:clamp(1.2rem,3vw,1.6rem);color:var(--gold2);text-transform:uppercase}
+.nl-close p{color:#c9c1b9;max-width:640px;margin:10px auto 0}
+.nl-close .cta{font-family:Cinzel,serif;font-weight:800;color:#fff;font-size:1.1rem;margin-top:14px}
+
 /* leadership */
 .role{border-left:3px solid var(--gold);padding-left:14px}
 .values{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
@@ -151,6 +168,9 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
   .links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:#0c0b0b;padding:20px;border-bottom:1px solid var(--line);gap:18px}
   .links.open{display:flex}
   .menu-btn{display:block}
+  .nl{padding:20px}
+  .nl-ev{grid-template-columns:minmax(0,1fr);gap:6px}
+  .nl-ev .st{justify-self:start}
   section{padding:56px 0}
 }
 </style>
@@ -167,6 +187,7 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
     <div class="links">
       <a href="#about">About</a>
       <a href="#events">Events</a>
+      <a href="#newsletter">Newsletter</a>
       <a href="#ranks">Ranks</a>
       <a href="#hiscores">Hiscores</a>
       <a href="#leadership">Leadership</a>
@@ -267,6 +288,67 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
   </div>
 </section>
 
+<section id="newsletter">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">Clan Newsletter</div><h2>🌅 November 2026</h2></div>
+      <p>Earn clan points, climb the ranks, and get some PvM in with the RAD community.</p>
+    </div>
+    <div class="nl">
+      <p class="nl-intro">November is packed with chances to earn clan points, climb the ranks, and enjoy some PvM with the RAD community! Whether you're grinding XP, chasing boss KC, or learning raids, there's something for everyone.</p>
+      <div class="nl-ev" data-start="2026-11-01" data-end="2026-11-30">
+        <div class="nl-date">Nov 1–30<small>All month</small></div>
+        <div><h3>📈 Total XP Competition</h3><p>Think you can outgrind the clan? Compete for the most total XP gained throughout November!</p></div>
+        <span class="st"></span>
+      </div>
+      <div class="nl-ev" data-start="2026-11-04" data-end="2026-11-04">
+        <div class="nl-date">Nov 4<small>Wednesday</small></div>
+        <div><h3>🐉 Hueycoatl Power Hour</h3><p>Join us for group PvM, boss KC, and a chance at some uniques! Learners welcome.</p><div class="nl-meta"><span>⏰ 8:00 PM ET</span><span>🌎 World 472</span><span>🎓 Learners welcome</span></div></div>
+        <span class="st"></span>
+      </div>
+      <div class="nl-ev" data-start="2026-11-08" data-end="2026-11-15">
+        <div class="nl-date">Nov 8–15<small>Boss of the Week</small></div>
+        <div><h3>⚔️ Leviathan BOTW</h3><p>Take on the Leviathan and compete for the highest KC during our Boss of the Week competition!</p></div>
+        <span class="st"></span>
+      </div>
+      <div class="nl-ev" data-start="2026-11-22" data-end="2026-12-01">
+        <div class="nl-date">Nov 22 – Dec 1<small>Skill of the Week</small></div>
+        <div><h3>🏃 Agility SOTW</h3><p>Time to get moving! Compete for the most Agility XP during our Skill of the Week competition!</p></div>
+        <span class="st"></span>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:20px">
+      <div class="card">
+        <h3>🏆 Competition Rewards</h3>
+        <ul class="info">
+          <li>Earn <b>clan rank points</b> through participation and milestones.</li>
+          <li>Competition winners receive a <b>custom clan role</b>.</li>
+          <li>Every event is another chance to <b>climb the RAD ranks</b>.</li>
+        </ul>
+        <p style="margin-top:14px">📊 Track competitions on <a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">Wise Old Man ↗</a></p>
+      </div>
+      <div class="card">
+        <h3>⚔️ Weekly Raid Nights</h3>
+        <p style="color:var(--gold2);font-weight:700;margin-bottom:4px">Tuesdays &amp; Thursdays · 8:00 PM ET until everyone's ready to call it</p>
+        <ul class="info">
+          <li><b>🩸 Tuesday:</b> Theatre of Blood / Tombs of Amascut</li>
+          <li><b>🐉 Thursday:</b> Chambers of Xeric (normal + Challenge Mode)</li>
+          <li><b>🎓 Learners welcome!</b> Teams are organized around interest, experience, and availability.</li>
+        </ul>
+        <p style="margin-top:12px">Want to raid outside these nights? Use our <b style="color:#fff">Looking for Group</b> channel to organize extra raids, bossing trips, or other PvM, including <b style="color:#fff">The Fractured Archive (TFA)</b>.</p>
+      </div>
+    </div>
+
+    <div class="nl-close">
+      <h3>Let's Make November Count!</h3>
+      <p>Our goal isn't just to chase XP, KC, or drops. It's to build an active community where players of all experience levels can find a team, learn something new, and enjoy the game together.</p>
+      <div class="cta">Show up. Get involved. Earn points. Have fun.</div>
+      <div style="margin-top:6px;color:var(--gold)">⚔️ Ride at Dawn! 🌅</div>
+    </div>
+  </div>
+</section>
+
 <section id="ranks">
   <div class="wrap">
     <div class="sec-head">
@@ -352,6 +434,11 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
       <div class="card news">
         <h3>Clan News</h3>
         <div style="margin-top:12px">
+          <div class="date">November 2026</div>
+          <p style="color:#fff;font-weight:700;margin:2px 0 4px">The November newsletter is out</p>
+          <p>Total XP competition, Leviathan BOTW, Agility SOTW and more. <a href="#newsletter">Read the newsletter →</a></p>
+        </div>
+        <div style="margin-top:18px">
           <div class="date">October 2026</div>
           <p style="color:#fff;font-weight:700;margin:2px 0 4px">Billionaire Bingo</p>
           <p>A full month of three-player team boards celebrating Dawn Thunder reaching <b style="color:var(--gold2)">1 billion total XP</b>. GG to every team that rode out.</p>
@@ -468,6 +555,23 @@ function updateRaids(){
   });
 }
 updateRaids(); setInterval(updateRaids, 30000);
+
+/* ---------- Newsletter event status (dates in Eastern Time) ---------- */
+function etToday(){
+  try { return new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York'}).format(new Date()); }
+  catch(e){ return new Date().toISOString().slice(0,10); }
+}
+function updateNewsletter(){
+  const today = etToday(), day = s => Math.round((Date.parse(s) - Date.parse(today))/864e5);
+  document.querySelectorAll('.nl-ev').forEach(ev=>{
+    const st = ev.querySelector('.st'), s = ev.dataset.start, e = ev.dataset.end;
+    st.className = 'st';
+    if (today > e){ st.textContent = 'Completed'; }
+    else if (today >= s){ st.textContent = s===e ? 'Today' : 'Live now'; st.classList.add('live'); }
+    else { const d = day(s); st.textContent = d===1 ? 'Starts tomorrow' : 'Starts in '+d+' days'; st.classList.add('soon'); }
+  });
+}
+updateNewsletter(); setInterval(updateNewsletter, 600000);
 
 /* ---------- TempleOSRS recent collection logs ---------- */
 // Set this to RAD's TempleOSRS group ID once the group is created (e.g. 1234).
