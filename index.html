@@ -258,7 +258,7 @@ blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;b
 @media (max-width:900px){.feed-grid{grid-template-columns:minmax(0,1fr)}}
 
 /* follow & support */
-.flinks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.flinks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .flinks.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .lk{display:flex;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;color:#e8e2da;transition:border-color .2s,transform .2s}
 .lk:hover{border-color:var(--gold);transform:translateY(-2px);color:#fff}
@@ -268,7 +268,8 @@ blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;b
 .lk p{font-size:.88rem;color:var(--gray);line-height:1.4}
 .lk .hdl{display:block;color:var(--gold2);font-weight:700;font-size:.82rem}
 .ic.yt{background:#c4302b}.ic.tt{background:#111;box-shadow:inset 0 0 0 1px #3a3330}.ic.x{background:#111;box-shadow:inset 0 0 0 1px #3a3330}
-.ic.rd{background:#ff4500}.ic.shop{background:linear-gradient(180deg,var(--red2),var(--red))}.ic.kofi{background:linear-gradient(180deg,#e0b23a,#b8861f);color:#1a1210}
+.ic.tw{background:#9146ff}.ic.rd{background:#ff4500}
+.ic.shop{background:linear-gradient(180deg,var(--red2),var(--red))}.ic.kofi{background:linear-gradient(180deg,#e0b23a,#b8861f);color:#1a1210}
 .sub-h{font-family:Cinzel,serif;font-weight:800;color:#fff;font-size:1.15rem;margin:28px 0 12px}
 @media (max-width:1100px){.flinks{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:640px){.flinks,.flinks.two{grid-template-columns:minmax(0,1fr)}}
@@ -682,13 +683,18 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
   <div class="wrap">
     <div class="sec-head">
       <div><div class="eyebrow">Follow &amp; Support</div><h2>Ride With Us Everywhere</h2></div>
-      <p>Clips, raid highlights, recruitment and clan news, plus a couple of ways to help keep RAD running.</p>
+      <p>Live streams, clips, raid highlights, recruitment and clan news, plus a couple of ways to help keep RAD running.</p>
     </div>
-    <div class="flinks">
+    <div class="sub-h" style="margin-top:0">📺 Watch</div>
+    <div class="flinks two">
+      <a class="lk" href="https://www.twitch.tv/rideatdawngg" target="_blank" rel="noopener"><span class="ic tw"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2 3 6v14h5v3h3l3-3h4l4-4V2zm15 11-3 3h-4l-3 3v-3H6V4h14zM15 7h2v5h-2zm-5 0h2v5h-2z"/></svg></span><span><h3>Twitch</h3><span class="hdl">twitch.tv/rideatdawngg</span><p>Catch RAD live: raids, events and bingo nights.</p></span></a>
       <a class="lk" href="https://www.youtube.com/@RideAtDawnOSRS" target="_blank" rel="noopener"><span class="ic yt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 7.5v9l7.5-4.5z"/></svg></span><span><h3>YouTube</h3><span class="hdl">@RideAtDawnOSRS</span><p>Raid runs, highlights and clan events.</p></span></a>
+    </div>
+    <div class="sub-h">📣 Follow</div>
+    <div class="flinks">
       <a class="lk" href="https://www.tiktok.com/@rideatdawn.gg" target="_blank" rel="noopener"><span class="ic tt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 3c.3 2.2 1.6 3.6 3.9 3.8v3a7.6 7.6 0 0 1-3.8-1.2v6.2A5.8 5.8 0 1 1 10.9 9v3.1a2.8 2.8 0 1 0 2 2.7V3z"/></svg></span><span><h3>TikTok</h3><span class="hdl">@rideatdawn.gg</span><p>Quick clips, big drops and RNG pain.</p></span></a>
       <a class="lk" href="https://x.com/RideAtDawnGG" target="_blank" rel="noopener"><span class="ic x"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.3L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.4 4.7H5.6z"/></svg></span><span><h3>X (Twitter)</h3><span class="hdl">@RideAtDawnGG</span><p>Announcements, events and results.</p></span></a>
-      <a class="lk" href="https://www.reddit.com/user/RideAtDawnGG/" target="_blank" rel="noopener"><span class="ic rd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.6 3.1a1 1 0 0 0-1.2.8l-.8 3.9C9.9 7.9 7.5 8.6 5.9 9.8a2.2 2.2 0 1 0-2.4 3.6v.4c0 3.3 3.8 6 8.5 6s8.5-2.7 8.5-6v-.4a2.2 2.2 0 1 0-2.4-3.6c-1.4-1-3.4-1.7-5.6-1.9l.7-3.2 2.4.5a1.6 1.6 0 1 0 .2-1.1zM8.8 12.4a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6zm6.4 0a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6zM9 16.4c.8.6 1.8.9 3 .9s2.2-.3 3-.9l.6.7c-1 .8-2.2 1.2-3.6 1.2s-2.6-.4-3.6-1.2z"/></svg></span><span><h3>Reddit</h3><span class="hdl">u/RideAtDawnGG</span><p>Recruitment posts, clan updates and OSRS chat.</p></span></a>
+      <a class="lk" href="https://www.reddit.com/user/RideAtDawnGG/" target="_blank" rel="noopener"><span class="ic rd"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12.1a2.3 2.3 0 0 0-3.9-1.6 11 11 0 0 0-5.7-1.8l1-4.6 3.2.7a1.6 1.6 0 1 0 .2-1l-3.6-.8a.5.5 0 0 0-.6.4l-1.1 5.3a11 11 0 0 0-5.8 1.8 2.3 2.3 0 1 0-2.5 3.8 4.5 4.5 0 0 0 0 .7c0 3.5 4 6.3 9 6.3s9-2.8 9-6.3a4.5 4.5 0 0 0 0-.7 2.3 2.3 0 0 0 1.3-2.2zM7 13.7a1.6 1.6 0 1 1 1.6 1.6A1.6 1.6 0 0 1 7 13.7zm9 4.2a6 6 0 0 1-4 1.2 6 6 0 0 1-4-1.2.5.5 0 0 1 .7-.7 5 5 0 0 0 3.3 1 5 5 0 0 0 3.3-1 .5.5 0 1 1 .7.7zm-.3-2.6a1.6 1.6 0 1 1 1.6-1.6 1.6 1.6 0 0 1-1.6 1.6z"/></svg></span><span><h3>Reddit</h3><span class="hdl">u/RideAtDawnGG</span><p>Recruitment posts and clan updates.</p></span></a>
     </div>
     <div class="sub-h">⚔️ Support the Clan</div>
     <div class="flinks two">
@@ -724,9 +730,10 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
       <a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">Wise Old Man</a>
       <a href="https://templeosrs.com/groups/overview.php?id=3818" target="_blank" rel="noopener">TempleOSRS</a>
       <a href="https://x.com/RideAtDawnGG" target="_blank" rel="noopener">X (Twitter)</a>
+      <a href="https://www.twitch.tv/rideatdawngg" target="_blank" rel="noopener">Twitch</a>
       <a href="https://www.youtube.com/@RideAtDawnOSRS" target="_blank" rel="noopener">YouTube</a>
-      <a href="https://www.tiktok.com/@rideatdawn.gg" target="_blank" rel="noopener">TikTok</a>
       <a href="https://www.reddit.com/user/RideAtDawnGG/" target="_blank" rel="noopener">Reddit</a>
+      <a href="https://www.tiktok.com/@rideatdawn.gg" target="_blank" rel="noopener">TikTok</a>
       <a href="https://ride-at-dawn-shop.fourthwall.com/" target="_blank" rel="noopener">Merch</a>
       <a href="https://ko-fi.com/rideatdawngg" target="_blank" rel="noopener">Ko-fi</a>
     </div>
