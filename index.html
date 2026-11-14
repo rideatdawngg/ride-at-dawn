@@ -257,6 +257,21 @@ blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;b
 .game .tagrow span.c{border-color:var(--gold);color:var(--gold2)}
 @media (max-width:900px){.feed-grid{grid-template-columns:minmax(0,1fr)}}
 
+/* follow & support */
+.flinks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.flinks.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.lk{display:flex;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;color:#e8e2da;transition:border-color .2s,transform .2s}
+.lk:hover{border-color:var(--gold);transform:translateY(-2px);color:#fff}
+.lk .ic{flex:0 0 48px;height:48px;border-radius:10px;display:grid;place-items:center;color:#fff}
+.lk .ic svg{width:26px;height:26px;fill:currentColor}
+.lk h3{font-size:1.05rem;color:#fff;margin-bottom:2px}
+.lk p{font-size:.88rem;color:var(--gray);line-height:1.4}
+.lk .hdl{display:block;color:var(--gold2);font-weight:700;font-size:.82rem}
+.ic.yt{background:#c4302b}.ic.tt{background:#111;box-shadow:inset 0 0 0 1px #3a3330}.ic.x{background:#111;box-shadow:inset 0 0 0 1px #3a3330}
+.ic.shop{background:linear-gradient(180deg,var(--red2),var(--red))}.ic.kofi{background:linear-gradient(180deg,#e0b23a,#b8861f);color:#1a1210}
+.sub-h{font-family:Cinzel,serif;font-weight:800;color:#fff;font-size:1.15rem;margin:28px 0 12px}
+@media (max-width:900px){.flinks,.flinks.two{grid-template-columns:minmax(0,1fr)}}
+
 /* leadership */
 .role{border-left:3px solid var(--gold);padding-left:14px}
 .values{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
@@ -661,6 +676,25 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
   </div>
 </section>
 
+<section id="follow">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">Follow &amp; Support</div><h2>Ride With Us Everywhere</h2></div>
+      <p>Clips, raid highlights and clan news, plus a couple of ways to help keep RAD running.</p>
+    </div>
+    <div class="flinks">
+      <a class="lk" href="https://www.youtube.com/@RideAtDawnOSRS" target="_blank" rel="noopener"><span class="ic yt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 7.5v9l7.5-4.5z"/></svg></span><span><h3>YouTube</h3><span class="hdl">@RideAtDawnOSRS</span><p>Raid runs, highlights and clan events.</p></span></a>
+      <a class="lk" href="https://www.tiktok.com/@rideatdawn.gg" target="_blank" rel="noopener"><span class="ic tt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 3c.3 2.2 1.6 3.6 3.9 3.8v3a7.6 7.6 0 0 1-3.8-1.2v6.2A5.8 5.8 0 1 1 10.9 9v3.1a2.8 2.8 0 1 0 2 2.7V3z"/></svg></span><span><h3>TikTok</h3><span class="hdl">@rideatdawn.gg</span><p>Quick clips, big drops and RNG pain.</p></span></a>
+      <a class="lk" href="https://x.com/RideAtDawnGG" target="_blank" rel="noopener"><span class="ic x"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.3L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.4 4.7H5.6z"/></svg></span><span><h3>X (Twitter)</h3><span class="hdl">@RideAtDawnGG</span><p>Announcements, events and results.</p></span></a>
+    </div>
+    <div class="sub-h">⚔️ Support the Clan</div>
+    <div class="flinks two">
+      <a class="lk" href="https://ride-at-dawn-shop.fourthwall.com/" target="_blank" rel="noopener"><span class="ic shop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 3 3 5.6l1.6 4.2 2.4-.9V21h10V8.9l2.4.9L21 5.6 15.5 3a3.5 3.5 0 0 1-7 0z"/></svg></span><span><h3>RAD Merch Shop</h3><span class="hdl">Shop on Fourthwall</span><p>Rep the clan with official Ride at Dawn gear.</p></span></a>
+      <a class="lk" href="https://ko-fi.com/rideatdawngg" target="_blank" rel="noopener"><span class="ic kofi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h14v7a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5zm14 1.5h1.5a3 3 0 0 1 0 6H17v-2h1.5a1 1 0 0 0 0-2H17zM10 9.2c-.9-1-2.6-.4-2.6 1 0 1.3 1.6 2.3 2.6 3.2 1-.9 2.6-1.9 2.6-3.2 0-1.4-1.7-2-2.6-1z"/><path d="M4 20h12v1.5H4z"/></svg></span><span><h3>Support on Ko-fi</h3><span class="hdl">ko-fi.com/rideatdawngg</span><p>Tips help cover clan costs like the website, domain and bots.</p></span></a>
+    </div>
+  </div>
+</section>
+
 <section class="join" id="join">
   <div class="wrap">
     <div class="eyebrow">Recruiting Now</div>
@@ -682,11 +716,15 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
 <footer>
   <div class="wrap">
     <div><div class="m">No One Rides Alone.</div>© <span id="yr"></span> Ride at Dawn · Old School RuneScape is a trademark of Jagex Ltd. This site is not affiliated with Jagex.</div>
-    <div style="display:flex;gap:18px">
+    <div style="display:flex;gap:10px 18px;flex-wrap:wrap">
       <a href="https://discord.gg/rideatdawn" target="_blank" rel="noopener">Discord</a>
       <a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">Wise Old Man</a>
       <a href="https://templeosrs.com/groups/overview.php?id=3818" target="_blank" rel="noopener">TempleOSRS</a>
       <a href="https://x.com/RideAtDawnGG" target="_blank" rel="noopener">X (Twitter)</a>
+      <a href="https://www.youtube.com/@RideAtDawnOSRS" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.tiktok.com/@rideatdawn.gg" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://ride-at-dawn-shop.fourthwall.com/" target="_blank" rel="noopener">Merch</a>
+      <a href="https://ko-fi.com/rideatdawngg" target="_blank" rel="noopener">Ko-fi</a>
     </div>
   </div>
 </footer>
