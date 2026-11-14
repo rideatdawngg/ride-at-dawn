@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ride at Dawn Bounty Tool</title>
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0807; --bg2:#170d0b; --panel:#1f1210; --panel2:#2a1714; --line:#4a2a20;
+  --ember:#e2561c; --ember2:#ff8a3d; --blood:#8e1b12; --bronze:#c9a56b; --bronze2:#e8d2a6;
+  --text:#efe4d6; --muted:#a8907c; --ok:#4fae5f; --info:#3d8fd6; --danger:#c0392b;
+  --pw:#ffb347;
+  --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:radial-gradient(ellipse at 50% -10%,#3a120c 0%,var(--bg) 55%) fixed,var(--bg);
+  color:var(--text);font:14px/1.4 Inter,system-ui,sans-serif;
+}
+button,input,textarea{font:inherit;color:inherit}
+h1,h2,.serif{font-family:Cinzel,Georgia,serif;letter-spacing:.04em}
+.app{display:grid;grid-template-columns:300px 1fr 340px;gap:16px;padding:16px;min-height:100vh}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--r);box-shadow:inset 0 0 0 1px #00000040,0 6px 24px #0008}
+.btn{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:8px 12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:.15s;white-space:nowrap}
+.btn:hover{border-color:var(--bronze);background:#3a1f19}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{background:linear-gradient(180deg,var(--ember2),var(--ember));border-color:#ff9b5a;color:#1a0904;font-weight:600}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ok{background:#1f3a24;border-color:#3d7a48}
+.btn.info{background:#18304a;border-color:#2f5f8f}
+.btn.danger{background:#4a1612;border-color:#8a2a20}
+.btn.icon{padding:6px 9px;min-width:36px}
+.btn.sm{padding:5px 9px;font-size:12px}
+input[type=text],input[type=url],input[type=number],textarea{
+  width:100%;background:#120a09;border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none}
+input:focus,textarea:focus{border-color:var(--ember)}
+::placeholder{color:#7c6656;font-style:italic}
+.muted{color:var(--muted)}
+.empty{color:var(--muted);text-align:center;padding:40px 16px}
+
+/* header */
+.brand{display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;padding:14px}
+.logo{width:170px;height:170px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 24px #e2561c55}
+.brand h1{font-size:20px;line-height:1.15;margin:2px 0;color:var(--bronze2);text-shadow:0 2px 0 #000}
+.ver{font-size:11px;color:var(--muted)}
+.credit{font-size:11px;color:var(--muted)}
+.home{display:inline-block;margin-top:6px;font-size:12px;color:var(--ember2);text-decoration:none}
+.home:hover{text-decoration:underline}
+.pw{padding:12px;text-align:center}
+.pw .row{display:flex;align-items:center;justify-content:center;gap:6px}
+.pw .label{font-family:Cinzel,serif;font-size:17px}
+.pw .value{font-size:26px;font-weight:600;color:var(--pw);margin-top:4px;word-break:break-all;text-shadow:0 0 12px #ff8a3d55}
+.claimed{flex:1;min-height:240px;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:6px}
+.citem{display:flex;gap:8px;align-items:center;padding:6px 8px;border:1px solid transparent;border-radius:8px;background:#ffffff08;cursor:pointer}
+.citem.sel{border-color:var(--ember);background:#e2561c22}
+.citem img{width:30px;height:30px;object-fit:contain}
+.citem .t{font-weight:600;font-size:13px}
+.citem .s{font-size:11px;color:var(--muted)}
+.leftbar{display:flex;gap:8px}
+.leftbar .grow{flex:1}
+
+/* center */
+.center-head{display:flex;align-items:center;justify-content:center;position:relative;min-height:60px}
+.center-head h2{margin:0;font-size:38px;color:var(--bronze2);text-shadow:0 3px 0 #000,0 0 30px #e2561c44}
+.center-head .zoom{position:absolute;right:0}
+.board{flex:1;min-height:420px;padding:14px;overflow:auto;
+  background:radial-gradient(ellipse at center,#3b1a12 0%,#24110d 70%);border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tile{position:relative;background:linear-gradient(180deg,#2e1a15,#1b0f0c);border:1px solid #5a3424;border-radius:10px;padding:12px 8px 10px;text-align:center;cursor:pointer;transition:.15s}
+.tile:hover{border-color:var(--bronze);transform:translateY(-2px)}
+.tile.sel{border-color:var(--ember2);box-shadow:0 0 0 2px var(--ember),0 0 20px #e2561c66}
+.tile img{width:56px;height:56px;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 2px 2px #000)}
+.tile .n{font-weight:600;margin-top:6px;font-size:13px}
+.tile .b{font-size:11px;color:var(--muted)}
+.tile .rt{display:inline-block;margin-top:4px;font-size:11px;padding:1px 7px;border-radius:99px;background:#00000055;color:var(--bronze)}
+.tile .cc{position:absolute;top:6px;right:8px;font-size:11px;color:var(--ok)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.actions input{max-width:280px}
+
+/* right */
+.topright{display:flex;justify-content:flex-end}
+.search{display:flex;gap:6px;position:relative}
+.menu{position:absolute;top:42px;right:0;left:0;z-index:20;background:#0b0606;border:1px solid var(--ember);border-radius:8px;overflow:hidden;display:none}
+.menu.open{display:block}
+.menu button{display:block;width:100%;text-align:left;padding:10px 12px;background:none;border:0;border-bottom:1px solid var(--line);cursor:pointer;color:var(--pw);font-family:Cinzel,serif}
+.menu button:hover{background:#e2561c22}
+.drops{flex:1;min-height:320px;overflow:auto;padding:8px;background:#e8dcc4;color:#2a1a10;border-color:#c9b48a}
+.drops.curated{background:#e9d98a}
+.drops .empty{color:#8a7560}
+.bosshead{display:flex;align-items:center;gap:10px;padding:4px 4px 8px;border-bottom:1px solid #00000022;margin-bottom:6px}
+.bosshead img{width:48px;height:48px;object-fit:contain}
+.bosshead .bn{font-family:Cinzel,serif;font-weight:800;font-size:16px}
+.sect{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#7a5c40;margin:8px 4px 4px}
+.drop{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;cursor:pointer}
+.drop:hover{background:#00000014}
+.drop img{width:30px;height:30px;object-fit:contain;flex:none}
+.drop .dn{flex:1;min-width:0}
+.drop .dn b{display:block;font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drop .dn span{font-size:11px;color:#6b5440}
+.drop .rate{font-size:12px;font-weight:600;color:#7a2e10;white-space:nowrap}
+.star{background:none;border:0;cursor:pointer;font-size:18px;line-height:1;color:#9a8466;padding:2px 4px}
+.star.on{color:#d18a00}
+.customrow{display:flex;gap:6px;align-items:center}
+.mode{font-size:11px;text-align:right;color:var(--muted);margin-top:-6px}
+.filters{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:12px}
+.checks label,.chk{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--bronze2)}
+input[type=checkbox]{accent-color:var(--ember);width:15px;height:15px}
+.range{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--bronze2)}
+.range input{width:74px;padding:5px 6px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.open{display:flex}
+.dialog{width:min(760px,100%);max-height:92vh;overflow:auto;padding:24px;border:1px solid var(--bronze);background:linear-gradient(180deg,#2a1511,#160b09)}
+.dialog h2{margin:0 0 14px;text-align:center;font-size:34px;color:var(--bronze2)}
+.field{margin:12px 0}
+.field label{display:block;font-family:Cinzel,serif;margin-bottom:6px;color:var(--bronze2)}
+.hint{font-size:12px;color:var(--muted);margin-top:4px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dialog .foot{display:flex;justify-content:center;gap:10px;margin-top:18px}
+.help h3{font-family:Cinzel,serif;color:var(--ember2);margin:16px 0 4px}
+.help p,.help li{color:var(--text)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0b0606;border:1px solid var(--ember);padding:10px 16px;border-radius:8px;z-index:60;opacity:0;pointer-events:none;transition:.25s;max-width:90vw}
+.toast.show{opacity:1}
+
+/* zoom / presentation */
+.present{position:fixed;inset:0;background:#000;z-index:40;display:none;grid-template-columns:260px 1fr;gap:20px;padding:24px}
+.present.open{display:grid}
+.present .side{display:flex;flex-direction:column;align-items:center;justify-content:space-around;text-align:center}
+.present .side h2{font-size:40px;margin:0;color:var(--bronze2)}
+.present .side .pwbig{font-size:30px;font-weight:600;color:var(--pw);word-break:break-all}
+.present .board{min-height:0;border-radius:var(--r)}
+.present .grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.present .tile img{width:80px;height:80px}
+.present .tile .n{font-size:16px}
+.present .zoomout{position:absolute;top:16px;right:20px}
+
+
+@media (max-width:1100px){
+  .app{grid-template-columns:1fr 1fr}
+  .col.mid{grid-column:1/-1;order:-1}
+}
+@media (max-width:700px){
+  .app{grid-template-columns:1fr;padding:16px}
+  .center-head h2{font-size:28px}
+  .center-head{flex-direction:column;gap:8px}
+  .center-head .zoom{position:static}
+  .two{grid-template-columns:1fr}
+  .present{grid-template-columns:1fr;overflow:auto}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- LEFT -->
+  <div class="col">
+    <div class="panel brand">
+      <img class="logo" id="logo" src="/logo.jpg" alt="Ride At Dawn logo">
+      <div>
+        <div class="ver">Version 2.0</div>
+        <h1>Ride at Dawn Bounty Tool</h1>
+        <div class="credit">Based on the original by Call Me Arty</div>
+        <a class="home" href="/">← Back to rideatdawn.gg</a>
+      </div>
+    </div>
+    <div class="panel pw">
+      <div class="row">
+        <button class="btn icon sm" id="pwEdit" title="Set a custom password">✎</button>
+        <button class="btn icon sm" id="pwRoll" title="Generate a new password">🎲</button>
+        <span class="label">Event Password:</span>
+      </div>
+      <div class="value" id="pwValue"></div>
+    </div>
+    <div class="panel claimed" id="claimed"></div>
+    <div class="leftbar">
+      <button class="btn danger grow" id="delClaimed" title="Delete the selected completed bounty">Delete Completed Bounty</button>
+    </div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="col mid">
+    <div class="center-head">
+      <h2>Active Bounties</h2>
+      <button class="btn zoom" id="zoomBtn">👁 Zoom In</button>
+    </div>
+    <div class="panel board" id="board"><div class="grid" id="grid"></div></div>
+    <div class="actions">
+      <input type="text" id="claimant" placeholder="Enter claimant's name...">
+      <button class="btn ok" id="claimRemove">Claim and Remove Bounty</button>
+      <button class="btn info" id="claimKeep">Claim without Removing</button>
+      <button class="btn danger" id="delBounty">Delete Bounty</button>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="col">
+    <div class="topright"><button class="btn icon" id="helpBtn" title="Help">❓ Help</button></div>
+    <div class="search">
+      <input type="text" id="bossInput" placeholder="Enter boss name..." list="bossList" autocomplete="off">
+      <button class="btn primary" id="bossGo">Enter</button>
+      <button class="btn icon" id="menuBtn" title="More">▾</button>
+      <div class="menu" id="menu">
+        <button data-act="search">Search bar</button>
+        <button data-act="collection">Create new collection</button>
+        <button data-act="collections">Manage collections</button>
+      </div>
+    </div>
+    <datalist id="bossList"></datalist>
+    <div class="panel drops" id="drops"></div>
+    <div class="customrow">
+      <button class="btn icon sm" id="curBtn" title="Toggle Standard / Curated (favourites)">☆</button>
+      <button class="btn icon sm" id="backBtn" title="Previous boss">‹</button>
+      <input type="text" id="customInput" placeholder="Custom bounty (eg. Any Unique)...">
+      <button class="btn icon sm" id="customAdd" title="Add custom bounty">＋</button>
+    </div>
+    <div class="mode" id="modeLbl">Standard</div>
+    <div class="filters">
+      <button class="btn primary" id="randomBtn">🎲 Random<br>Bounty</button>
+      <div class="checks">
+        <label><input type="checkbox" id="hAlways" checked> Hide Always</label>
+        <label><input type="checkbox" id="hTertiary" checked> Hide Tertiary</label>
+        <label><input type="checkbox" id="hVaries" checked> Hide Varies</label>
+        <label><input type="checkbox" id="hRdt" checked> Hide RDT</label>
+      </div>
+    </div>
+    <label class="chk"><input type="checkbox" id="noDupes" checked> Prevent random duplicates</label>
+    <div class="range">
+      <label class="chk" style="width:100%"><input type="checkbox" id="rangeOn"> Only show drops with a rate between</label>
+      <span>1/<input type="number" id="rMin" min="1" placeholder="100"></span>
+      <span>and 1/<input type="number" id="rMax" min="1" placeholder="5000"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Presentation / zoom -->
+<div class="present" id="present">
+  <div class="side">
+    <h2>Active<br>Bounties<br>→</h2>
+    <div><div class="serif" style="font-size:26px">Bounty Password</div><div class="pwbig" id="pwBig"></div></div>
+  </div>
+  <div class="board panel"><div class="grid" id="grid2"></div></div>
+  <button class="btn zoomout" id="zoomOut">👁 Zoom Out</button>
+</div>
+
+<!-- Collection modal -->
+<div class="modal" id="collModal">
+  <div class="panel dialog">
+    <h2>New Collection</h2>
+    <div class="field"><label>Collection name</label><input type="text" id="cName" placeholder="e.g. Clan Event Uniques"></div>
+    <div class="field"><label>Items (one per line)</label>
+      <textarea id="cItems" rows="10" placeholder="Twisted bow | 1/34500&#10;Dragon claws | 1/431&#10;Any pet"></textarea>
+      <div class="hint">Format: <code>Item name | rate</code>. The rate is optional. Type the collection's name in the boss search to load it.</div>
+    </div>
+    <div class="foot"><button class="btn" data-close>Cancel</button><button class="btn primary" id="cSave">Save Collection</button></div>
+  </div>
+</div>
+
+<div class="modal" id="collList">
+  <div class="panel dialog">
+    <h2>Collections</h2>
+    <div id="collRows"></div>
+    <div class="foot"><button class="btn" data-close>Close</button></div>
+  </div>
+</div>
+
+<!-- Help modal -->
+<div class="modal" id="help">
+  <div class="panel dialog help">
+    <h2>How it works</h2>
+    <h3>1. Event password</h3>
+    <p>Players include the password in their drop screenshots to prove the drop happened during the event. Press 🎲 to roll a new one or ✎ to type your own.</p>
+    <h3>2. Add bounties</h3>
+    <ul>
+      <li>Type a boss name and press <b>Enter</b> to load its drop table from the OSRS Wiki. Click a drop to add it as an active bounty.</li>
+      <li>Click ☆ next to a drop to favourite it. The ☆ button under the list switches between <b>Standard</b> (the current boss) and <b>Curated</b> (all your favourites).</li>
+      <li><b>Random Bounty</b> picks a drop from the current list, respecting the Hide filters and the rarity range. Tick <i>Prevent duplicates</i> to skip drops that are already active.</li>
+      <li>Type anything in the custom bounty box (e.g. "Any Unique") and press ＋.</li>
+      <li>Use ▾ → <b>Create new collection</b> to build your own list of drops. Search its name like a boss.</li>
+    </ul>
+    <h3>3. Claim bounties</h3>
+    <p>Select a bounty, type the claimant's name, then choose <b>Claim and Remove</b> (one-time bounty) or <b>Claim without Removing</b> (bounty stays up for others). Claims appear on the left. Select one and press <b>Delete Completed</b> to remove it.</p>
+    <h3>4. Streaming</h3>
+    <p><b>Zoom In</b> shows a clean full-screen view of the bounties and password for screen sharing.</p>
+    <p class="muted">Everything is saved in your browser, so refreshing the page won't lose your event.</p>
+    <div class="foot"><button class="btn primary" data-close>Got it</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const FALLBACK_LOGO = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g"><stop offset="0" stop-color="#7a1a0e"/><stop offset="1" stop-color="#1a0806"/></radialGradient></defs><circle cx="50" cy="50" r="48" fill="url(#g)" stroke="#c9a56b" stroke-width="3"/><text x="50" y="62" font-family="Georgia,serif" font-size="30" font-weight="bold" fill="#e8d2a6" text-anchor="middle">RAD</text></svg>`);
+const WIKI = 'https://oldschool.runescape.wiki';
+(() => { const l = document.getElementById('logo'); const fb = () => { l.onerror = null; l.src = FALLBACK_LOGO; }; if (l.complete && !l.naturalWidth) fb(); else l.onerror = fb; })();
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 10);
+const imgUrl = name => `${WIKI}/images/${encodeURIComponent(String(name).trim().replace(/ /g, '_'))}.png`;
+const GENERIC = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M8 4h14l4 4v20H8z" fill="#c9a56b" stroke="#5a3424"/><path d="M11 12h11M11 16h11M11 20h7" stroke="#5a3424" stroke-width="1.5"/></svg>');
+const imgTag = (name, cls = '') => `<img class="${cls}" src="${esc(name === null ? GENERIC : imgUrl(name))}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${GENERIC}'">`;
+
+const BOSSES = ["Abyssal Sire","Alchemical Hydra","Amoxliatl","Araxxor","Artio","Barrows","Bryophyta","Callisto","Calvar'ion","Cerberus","Chambers of Xeric","Chaos Elemental","Chaos Fanatic","Commander Zilyana","Corporeal Beast","Crazy archaeologist","Dagannoth Prime","Dagannoth Rex","Dagannoth Supreme","Deranged archaeologist","Doom of Mokhaiotl","Duke Sucellus","General Graardor","Giant Mole","Grotesque Guardians","Hespori","Kalphite Queen","King Black Dragon","Kraken","Kree'arra","K'ril Tsutsaroth","Lunar Chest","Mimic","Nex","Nightmare","Obor","Phantom Muspah","Phosani's Nightmare","Sarachnis","Scorpia","Scurrius","Skotizo","Sol Heredit","Spindel","Tempoross","The Gauntlet","The Corrupted Gauntlet","The Hueycoatl","The Leviathan","The Royal Titans","The Whisperer","Theatre of Blood","Thermonuclear smoke devil","Tombs of Amascut","TzKal-Zuk","TzTok-Jad","Vardorvis","Venenatis","Vet'ion","Vorkath","Wintertodt","Yama","Zalcano","Zulrah"];
+
+const PW_A = ["Bronze","Iron","Steel","Black","Mithril","Adamant","Rune","Dragon","Silver","Gold","Crystal","Barrows","Void","Ancient","Blood","Shadow","Ember","Dawn","Rusty","Twisted"];
+const PW_B = ["Slayer","Prayer","Cooking","Fishing","Mining","Smithing","Fletching","Herblore","Agility","Thieving","Crafting","Magic","Ranged","Attack","Strength","Rider","Bandit","Scimitar","Dagger","Shield"];
+const rollPw = () => PW_A[Math.random()*PW_A.length|0] + PW_B[Math.random()*PW_B.length|0] + (1 + (Math.random()*99|0));
+
+/* ---------- state ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('rad-bt-' + k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('rad-bt-' + k, JSON.stringify(v)); } catch {} }
+};
+const S = {
+  password: store.get('password', rollPw()),
+  active: store.get('active', []),        // {id,name,boss,rate,img}
+  claimed: store.get('claimed', []),      // {id,name,boss,claimant,at,img}
+  favs: store.get('favs', []),            // {name,boss,rate,qty}
+  colls: store.get('colls', {}),          // name -> [{name,rate}]
+  filters: store.get('filters', {hAlways:true,hTertiary:true,hVaries:true,hRdt:true,noDupes:true,rangeOn:false,rMin:'',rMax:''}),
+  curated: false, sel: null, selClaim: null,
+  boss: null, history: [],
+};
+const save = () => ['password','active','claimed','favs','colls','filters'].forEach(k => store.set(k, S[k]));
+
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); }
+
+/* ---------- rarity ---------- */
+function rateValue(r) {
+  if (!r) return null;
+  const s = String(r).replace(/[,~≈<>]/g, '').trim();
+  if (/^always$/i.test(s)) return 1;
+  const m = s.match(/([\d.]+)\s*\/\s*([\d.]+)/);
+  if (m) return parseFloat(m[1]) / parseFloat(m[2]);
+  return null;
+}
+function prettyRate(r) {
+  const m = String(r || '').replace(/,/g, '').match(/^(~?)\s*([\d.]+)\s*\/\s*([\d.]+)/);
+  if (!m) return r || '';
+  return m[1] + (+m[2]).toLocaleString() + '/' + (+m[3]).toLocaleString();
+}
+
+/* ---------- OSRS wiki ---------- */
+function cleanWiki(s) {
+  return String(s || '')
+    .replace(/<ref[\s\S]*?(<\/ref>|\/>)/gi, '')
+    .replace(/\{\{(?:sic|nowrap)\|([^}]*)\}\}/gi, '$1')
+    .replace(/\{\{[^{}]*\}\}/g, '')
+    .replace(/\[\[(?:[^\]|]*\|)?([^\]]*)\]\]/g, '$1')
+    .replace(/<[^>]+>/g, '').replace(/'''?/g, '').trim();
+}
+function parseTemplateParams(body) {
+  // split by | at depth 0
+  const parts = []; let depth = 0, cur = '';
+  for (let i = 0; i < body.length; i++) {
+    const c = body[i], n = body[i+1];
+    if ((c === '{' && n === '{') || (c === '[' && n === '[')) { depth++; cur += c + n; i++; continue; }
+    if ((c === '}' && n === '}') || (c === ']' && n === ']')) { depth--; cur += c + n; i++; continue; }
+    if (c === '|' && depth === 0) { parts.push(cur); cur = ''; continue; }
+    cur += c;
+  }
+  parts.push(cur);
+  const o = {};
+  parts.slice(1).forEach(p => { const i = p.indexOf('='); if (i > 0) o[p.slice(0, i).trim().toLowerCase()] = p.slice(i + 1).trim(); });
+  return o;
+}
+function parseDrops(wikitext) {
+  const drops = []; let section = 'Drops';
+  const lines = wikitext.split('\n');
+  for (const line of lines) {
+    const h = line.match(/^(={2,5})\s*(.+?)\s*\1\s*$/);
+    if (h) { section = cleanWiki(h[2]); continue; }
+    const re = /\{\{\s*DropsLine\s*\|/gi; let m;
+    while ((m = re.exec(line))) {
+      // find matching close
+      let depth = 1, i = m.index + 2;
+      while (i < line.length && depth > 0) {
+        if (line.startsWith('{{', i)) { depth++; i += 2; } else if (line.startsWith('}}', i)) { depth--; i += 2; } else i++;
+      }
+      const p = parseTemplateParams(line.slice(m.index + 2, i - 2));
+      if (!p.name) continue;
+      const name = cleanWiki(p.name);
+      const rarity = cleanWiki(p.rarity).replace(/\s+/g, ' ');
+      const rdt = /rare drop table|gem drop table|\brdt\b/i.test(section + ' ' + name);
+      const tertiary = /tertiary/i.test(section);
+      drops.push({ name, qty: cleanWiki(p.quantity), rarity, section, rdt, tertiary, img: p.image ? cleanWiki(p.image).replace(/^File:/i,'').replace(/\.png$/i,'') : name });
+    }
+  }
+  // dedupe by name+rarity+qty
+  const seen = new Set();
+  return drops.filter(d => { const k = d.name + '|' + d.rarity + '|' + d.qty; if (seen.has(k)) return false; seen.add(k); return true; });
+}
+function parseBossImage(wikitext, boss) {
+  const m = wikitext.match(/\|\s*image\d?\s*=\s*\[\[File:([^\]|]+)/i);
+  return m ? m[1].trim().replace(/\.png$/i, '') : boss;
+}
+async function fetchWiki(page) {
+  const u = `${WIKI}/api.php?action=parse&format=json&prop=wikitext&redirects=1&origin=*&page=${encodeURIComponent(page)}`;
+  const r = await fetch(u); const j = await r.json();
+  if (j.error) throw new Error(j.error.info || 'Not found');
+  return { title: j.parse.title, text: j.parse.wikitext['*'] };
+}
+async function loadBoss(name, pushHistory = true) {
+  name = name.trim(); if (!name) return;
+  const collKey = Object.keys(S.colls).find(k => k.toLowerCase() === name.toLowerCase());
+  if (pushHistory && S.boss) S.history.push(S.boss);
+  S.curated = false;
+  if (collKey) {
+    S.boss = { title: collKey, img: null, drops: S.colls[collKey].map(i => ({ name: i.name, rarity: i.rate || '', qty: '', section: collKey, img: i.name })), coll: true };
+    renderDrops(); return;
+  }
+  $('drops').innerHTML = '<div class="empty">Loading drops from the OSRS Wiki…</div>';
+  try {
+    let { title, text } = await fetchWiki(name);
+    let drops = parseDrops(text);
+    if (!drops.length) { // try drop subpages used by raids etc.
+      for (const sub of ['/Drops', '/Rewards', '/Loot']) {
+        try { const r = await fetchWiki(title + sub); const d = parseDrops(r.text); if (d.length) { drops = d; break; } } catch {}
+      }
+    }
+    S.boss = { title, img: parseBossImage(text, title), drops };
+    if (!drops.length) toast(`No drop table found for ${title}`);
+  } catch (e) {
+    S.boss = { title: name, img: null, drops: [], error: e.message || String(e) };
+  }
+  renderDrops();
+}
+
+/* ---------- filtering ---------- */
+function visibleDrops() {
+  const f = S.filters;
+  const list = S.curated ? S.favs.map(x => ({ ...x, img: x.img || x.name })) : (S.boss?.drops || []).map(d => ({ ...d, boss: S.boss.title }));
+  return list.filter(d => {
+    const r = (d.rarity || '').toLowerCase();
+    if (f.hAlways && r === 'always') return false;
+    if (f.hVaries && r === 'varies') return false;
+    if (f.hTertiary && d.tertiary) return false;
+    if (f.hRdt && d.rdt) return false;
+    if (f.rangeOn) {
+      const v = rateValue(d.rarity); if (v === null) return false;
+      const den = 1 / v;
+      if (f.rMin && den < +f.rMin) return false;
+      if (f.rMax && den > +f.rMax) return false;
+    }
+    return true;
+  });
+}
+const isFav = d => S.favs.some(f => f.name === d.name && f.boss === d.boss);
+
+/* ---------- render ---------- */
+function renderDrops() {
+  const el = $('drops');
+  el.classList.toggle('curated', S.curated);
+  $('modeLbl').textContent = S.curated ? 'Curated' : 'Standard';
+  $('curBtn').textContent = S.curated ? '★' : '☆';
+  if (!S.curated && !S.boss) { el.innerHTML = `<div class="empty">Submit a boss's name above to populate their drops here</div>`; return; }
+  if (S.curated && !S.favs.length) { el.innerHTML = `<div class="empty">Favourite drops in the Standard panel to have them appear here</div>`; return; }
+  if (!S.curated && S.boss.error) { el.innerHTML = `<div class="empty">Couldn't load “${esc(S.boss.title)}”.<br><small>${esc(S.boss.error)}</small></div>`; return; }
+  const list = visibleDrops();
+  let html = '';
+  if (!S.curated) html += `<div class="bosshead">${S.boss.img ? imgTag(S.boss.img) : ''}<div><div class="bn">${esc(S.boss.title)}</div><div class="muted" style="color:#6b5440;font-size:11px">${list.length} of ${S.boss.drops.length} drops shown</div></div></div>`;
+  let sect = null;
+  list.forEach((d, i) => {
+    const sec = S.curated ? d.boss : d.section;
+    if (sec !== sect) { sect = sec; html += `<div class="sect">${esc(sec)}</div>`; }
+    html += `<div class="drop" data-i="${i}">${imgTag(d.img)}<div class="dn"><b>${esc(d.name)}</b><span>${d.qty ? 'x' + esc(d.qty) : ''}</span></div><div class="rate">${esc(prettyRate(d.rarity))}</div><button class="star ${isFav(d) ? 'on' : ''}" data-star="${i}" title="Favourite">${isFav(d) ? '★' : '☆'}</button></div>`;
+  });
+  el.innerHTML = html || '<div class="empty">No drops match your filters</div>';
+  el._list = list;
+}
+function tileHTML(b, sel) {
+  const claims = S.claimed.filter(c => c.bid === b.id).length;
+  return `<div class="tile ${sel ? 'sel' : ''}" data-id="${b.id}">${claims ? `<span class="cc">✓${claims}</span>` : ''}${imgTag(b.img)}<div class="n">${esc(b.name)}</div>${b.boss ? `<div class="b">${esc(b.boss)}</div>` : ''}${b.rate ? `<span class="rt">${esc(prettyRate(b.rate))}</span>` : ''}</div>`;
+}
+function renderActive() {
+  const empty = '<div class="empty" style="grid-column:1/-1">No active bounties yet. Pick a drop on the right, roll a random one, or add a custom bounty.</div>';
+  $('grid').innerHTML = S.active.length ? S.active.map(b => tileHTML(b, b.id === S.sel)).join('') : empty;
+  $('grid2').innerHTML = S.active.length ? S.active.map(b => tileHTML(b, false)).join('') : empty;
+  const has = !!S.active.find(b => b.id === S.sel);
+  ['claimRemove', 'claimKeep', 'delBounty'].forEach(id => $(id).disabled = !has);
+}
+function renderClaimed() {
+  const el = $('claimed');
+  el.innerHTML = S.claimed.length ? S.claimed.slice().reverse().map(c =>
+    `<div class="citem ${c.id === S.selClaim ? 'sel' : ''}" data-id="${c.id}">${imgTag(c.img)}<div><div class="t">${esc(c.name)}</div><div class="s">${esc(c.claimant)}${c.boss ? ' · ' + esc(c.boss) : ''} · ${new Date(c.at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div></div></div>`).join('')
+    : '<div class="empty">Claimed bounties will appear here</div>';
+  $('delClaimed').disabled = !S.selClaim;
+}
+function renderPw() { $('pwValue').textContent = S.password; $('pwBig').textContent = S.password; }
+function renderAll() { renderPw(); renderActive(); renderClaimed(); renderDrops(); }
+
+/* ---------- actions ---------- */
+function addBounty(d) {
+  const b = { id: uid(), name: d.name, boss: d.boss || '', rate: d.rarity || d.rate || '', img: d.img === undefined ? d.name : d.img };
+  S.active.push(b); S.sel = b.id; save(); renderActive();
+  toast(`Bounty added: ${b.name}`);
+}
+function claim(remove) {
+  const b = S.active.find(x => x.id === S.sel); if (!b) return;
+  const who = $('claimant').value.trim(); if (!who) { toast("Enter the claimant's name first"); $('claimant').focus(); return; }
+  S.claimed.push({ id: uid(), bid: b.id, name: b.name, boss: b.boss, claimant: who, at: Date.now(), img: b.img });
+  if (remove) { S.active = S.active.filter(x => x.id !== b.id); S.sel = null; }
+  $('claimant').value = ''; save(); renderActive(); renderClaimed();
+  toast(`${who} claimed ${b.name}!`);
+}
+function randomBounty() {
+  let list = visibleDrops();
+  if (S.filters.noDupes) list = list.filter(d => !S.active.some(a => a.name === d.name && (a.boss || '') === (d.boss || '')));
+  if (!list.length) { toast(S.boss || S.curated ? 'No eligible drops left. Try changing the filters.' : 'Load a boss first'); return; }
+  addBounty(list[Math.random() * list.length | 0]);
+}
+function openModal(id) { $(id).classList.add('open'); }
+function closeModals() { document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open')); }
+
+/* ---------- wiring ---------- */
+$('bossList').innerHTML = BOSSES.map(b => `<option value="${esc(b)}">`).join('');
+$('bossGo').onclick = () => loadBoss($('bossInput').value);
+$('bossInput').onkeydown = e => { if (e.key === 'Enter') loadBoss($('bossInput').value); };
+$('backBtn').onclick = () => { if (S.curated) { S.curated = false; renderDrops(); return; } const prev = S.history.pop(); if (prev) { S.boss = prev; $('bossInput').value = prev.title; renderDrops(); } else toast('No previous boss'); };
+$('curBtn').onclick = () => { S.curated = !S.curated; renderDrops(); };
+$('drops').onclick = e => {
+  const list = $('drops')._list || [];
+  const st = e.target.closest('[data-star]');
+  if (st) {
+    const d = list[+st.dataset.star];
+    if (isFav(d)) S.favs = S.favs.filter(f => !(f.name === d.name && f.boss === d.boss));
+    else S.favs.push({ name: d.name, boss: d.boss, rarity: d.rarity, qty: d.qty, img: d.img, section: d.section, tertiary: d.tertiary, rdt: d.rdt });
+    save(); renderDrops(); return;
+  }
+  const row = e.target.closest('.drop'); if (row) addBounty(list[+row.dataset.i]);
+};
+$('customAdd').onclick = () => { const v = $('customInput').value.trim(); if (!v) return; addBounty({ name: v, boss: '', img: null }); $('customInput').value = ''; };
+$('customInput').onkeydown = e => { if (e.key === 'Enter') $('customAdd').click(); };
+$('randomBtn').onclick = randomBounty;
+['hAlways','hTertiary','hVaries','hRdt','noDupes','rangeOn'].forEach(id => { $(id).checked = !!S.filters[id]; $(id).onchange = () => { S.filters[id] = $(id).checked; save(); renderDrops(); }; });
+['rMin','rMax'].forEach(id => { $(id).value = S.filters[id] || ''; $(id).oninput = () => { S.filters[id] = $(id).value; if (S.filters.rangeOn) { save(); renderDrops(); } }; });
+
+$('grid').onclick = e => { const t = e.target.closest('.tile'); if (!t) return; S.sel = S.sel === t.dataset.id ? null : t.dataset.id; renderActive(); };
+$('claimRemove').onclick = () => claim(true);
+$('claimKeep').onclick = () => claim(false);
+$('claimant').onkeydown = e => { if (e.key === 'Enter') claim(true); };
+$('delBounty').onclick = () => { const b = S.active.find(x => x.id === S.sel); if (!b || !confirm(`Delete the bounty "${b.name}"?`)) return; S.active = S.active.filter(x => x.id !== b.id); S.sel = null; save(); renderActive(); };
+$('claimed').onclick = e => { const c = e.target.closest('.citem'); if (!c) return; S.selClaim = S.selClaim === c.dataset.id ? null : c.dataset.id; renderClaimed(); };
+$('delClaimed').onclick = () => { if (!S.selClaim) return; S.claimed = S.claimed.filter(c => c.id !== S.selClaim); S.selClaim = null; save(); renderClaimed(); renderActive(); };
+
+$('pwRoll').onclick = () => { S.password = rollPw(); save(); renderPw(); };
+$('pwEdit').onclick = () => { const v = prompt('Set the event password:', S.password); if (v && v.trim()) { S.password = v.trim(); save(); renderPw(); } };
+
+$('menuBtn').onclick = e => { e.stopPropagation(); $('menu').classList.toggle('open'); };
+document.addEventListener('click', () => $('menu').classList.remove('open'));
+$('menu').onclick = e => {
+  const a = e.target.dataset.act;
+  if (a === 'search') $('bossInput').focus();
+  if (a === 'collection') { $('cName').value = ''; $('cItems').value = ''; openModal('collModal'); }
+  if (a === 'collections') { renderCollList(); openModal('collList'); }
+};
+$('cSave').onclick = () => {
+  const n = $('cName').value.trim(); if (!n) { toast('Give the collection a name'); return; }
+  const items = $('cItems').value.split('\n').map(l => l.trim()).filter(Boolean).map(l => { const [name, rate] = l.split('|').map(x => x.trim()); return { name, rate: rate || '' }; });
+  if (!items.length) { toast('Add at least one item'); return; }
+  S.colls[n] = items; save(); closeModals(); $('bossInput').value = n; loadBoss(n); toast(`Collection “${n}” saved`);
+};
+function renderCollList() {
+  const keys = Object.keys(S.colls);
+  $('collRows').innerHTML = keys.length ? keys.map(k => `<div style="display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)"><div style="flex:1"><b>${esc(k)}</b> <span class="muted">(${S.colls[k].length} items)</span></div><button class="btn sm" data-load="${esc(k)}">Load</button><button class="btn sm" data-edit="${esc(k)}">Edit</button><button class="btn sm danger" data-del="${esc(k)}">Delete</button></div>`).join('') : '<div class="empty">No collections yet</div>';
+}
+$('collRows').onclick = e => {
+  const t = e.target;
+  if (t.dataset.load) { closeModals(); $('bossInput').value = t.dataset.load; loadBoss(t.dataset.load); }
+  if (t.dataset.edit) { const k = t.dataset.edit; closeModals(); $('cName').value = k; $('cItems').value = S.colls[k].map(i => i.rate ? `${i.name} | ${i.rate}` : i.name).join('\n'); openModal('collModal'); }
+  if (t.dataset.del && confirm(`Delete collection “${t.dataset.del}”?`)) { delete S.colls[t.dataset.del]; save(); renderCollList(); }
+};
+
+$('helpBtn').onclick = () => openModal('help');
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = closeModals);
+document.querySelectorAll('.modal').forEach(m => m.onclick = e => { if (e.target === m) closeModals(); });
+$('zoomBtn').onclick = () => $('present').classList.add('open');
+$('zoomOut').onclick = () => $('present').classList.remove('open');
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModals(); $('present').classList.remove('open'); } });
+
+save(); renderAll();
+</script>
+</body>
+</html>
