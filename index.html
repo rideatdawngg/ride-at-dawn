@@ -199,6 +199,13 @@ blockquote{margin-top:16px;border-left:3px solid var(--gold);padding:10px 16px;b
 .fall .info li::before{content:"🍂";font-size:.8rem;top:7px}
 .fall .nl-close{border-color:#5a3520;background:radial-gradient(ellipse at 50% 130%,rgba(232,135,58,.35),transparent 65%),linear-gradient(180deg,#1d1310,#150f0c)}
 .fall .nl-close h3{color:var(--harvest)}
+.flyer{max-width:620px;margin:0 auto}
+.flyer img{display:block;width:100%;height:auto;border-radius:8px;border:1px solid #4a2e1c;box-shadow:0 18px 50px rgba(0,0,0,.6)}
+.flyer-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.nl-text{max-width:900px;margin:24px auto 0}
+.nl-text summary{cursor:pointer;text-align:center;color:var(--harvest,#f0b24a);font-weight:700;letter-spacing:.06em;padding:10px;list-style:none}
+.nl-text summary::-webkit-details-marker{display:none}
+.nl-text[open] summary{margin-bottom:16px}
 .leaves{position:absolute;inset:0;pointer-events:none;z-index:0}
 .leaves svg{position:absolute;top:-80px;width:var(--s,40px);height:var(--s,40px);opacity:.7;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5));animation:leaf-fall var(--d,16s) linear var(--dl,0s) infinite}
 @keyframes leaf-fall{
@@ -472,6 +479,20 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
       <div><div class="eyebrow">Clan Newsletter · Fall Edition</div><h2>🍂 November 2026</h2></div>
       <p>Earn clan points, climb the ranks, and get some PvM in with the RAD community.</p>
     </div>
+    <div class="flyer">
+      <a href="flyers/november-2026.png" target="_blank" rel="noopener" title="Open full size">
+        <picture>
+          <source srcset="flyers/november-2026.webp" type="image/webp">
+          <img src="flyers/november-2026.jpg" width="1080" height="2100" alt="Ride at Dawn November 2026 events flyer. Weekly raid nights: every Tuesday ToB/ToA, every Thursday CoX (normal and Challenge Mode), 8:00 PM EST, learners welcome. November events: Nov 1-30 Total XP Competition; Nov 4 Hueycoatl Power Hour on W472; Nov 8-15 Leviathan Boss of the Week; Nov 22-Dec 1 Agility Skill of the Week. Earn rank points, win a custom in-game clan role, raid any night through Looking for Group. Join the Discord at discord.gg/rideatdawn. Home World 472." loading="lazy">
+        </picture>
+      </a>
+      <div class="flyer-actions">
+        <a class="btn btn-ghost" href="flyers/november-2026.png" target="_blank" rel="noopener">🔍 Full size</a>
+        <a class="btn btn-ghost" href="flyers/november-2026.png" download="RAD-November-2026-Events.png">⬇ Download flyer</a>
+      </div>
+    </div>
+    <details class="nl-text">
+      <summary>📖 Read as text</summary>
     <div class="nl">
       <p class="nl-intro">November is packed with chances to earn clan points, climb the ranks, and enjoy some PvM with the RAD community! Whether you're grinding XP, chasing boss KC, or learning raids, there's something for everyone.</p>
       <div class="nl-ev" data-start="2026-11-01" data-end="2026-11-30">
@@ -501,7 +522,7 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
         <h3>🏆 Competition Rewards</h3>
         <ul class="info">
           <li>Earn <b>clan rank points</b> through participation and milestones.</li>
-          <li>Competition winners receive a <b>custom clan role</b>.</li>
+          <li>Competition winners receive a <b>custom in-game clan role</b>.</li>
           <li>Every event is another chance to <b>climb the RAD ranks</b>.</li>
         </ul>
         <p style="margin-top:14px">📊 Track competitions on <a href="https://wiseoldman.net/groups/16463" target="_blank" rel="noopener">Wise Old Man ↗</a></p>
@@ -524,6 +545,7 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
       <div class="cta">Show up. Get involved. Earn points. Have fun.</div>
       <div style="margin-top:6px;color:var(--gold)">⚔️ Ride at Dawn! 🌅</div>
     </div>
+    </details>
   </div>
 </section>
 
