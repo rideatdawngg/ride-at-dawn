@@ -633,19 +633,24 @@ footer .m{font-family:Cinzel,serif;color:var(--gold);font-size:1rem}
         <table class="tbl"><thead><tr><th>Player</th><th>Item</th><th>Date</th></tr></thead><tbody id="t-clog"><tr><td colspan="3" class="empty">Loading from TempleOSRS…</td></tr></tbody></table>
       </div>
       <div class="card">
-        <h3>Boss of the Week — <span id="botw-boss">Leviathan</span></h3>
+        <h3><span id="wk-type">Skill of the Week</span> — <span id="botw-boss">Agility</span></h3>
         <div class="botw" style="margin:10px 0 16px">
           <div class="crown">👑</div>
-          <div><div class="who" id="botw-who">Dawn Thunder</div><div style="color:var(--gray)" id="botw-sub">Current leader · +88 KC</div></div>
+          <div><div class="who" id="botw-who">Loading…</div><div style="color:var(--gray)" id="botw-sub">Live standings from Wise Old Man</div></div>
         </div>
-        <table class="tbl"><thead><tr><th>#</th><th>Rider</th><th>KC</th></tr></thead>
-          <tbody id="botw-rows"><tr><td class="pos">1</td><td>Dawn Thunder</td><td>+88</td></tr><tr><td class="pos">2</td><td>CT</td><td>+32</td></tr><tr><td class="pos">3</td><td>cozy gamer</td><td>+1</td></tr></tbody>
+        <table class="tbl"><thead><tr><th>#</th><th>Rider</th><th id="wk-unit">XP</th></tr></thead>
+          <tbody id="botw-rows"><tr><td colspan="3" class="empty">Loading standings…</td></tr></tbody>
         </table>
-        <p class="note" id="botw-note">Clan total: 121 KC · Ends Nov 16 · <a href="https://wiseoldman.net/competitions/163614" target="_blank" rel="noopener">Full standings ↗</a></p>
+        <p class="note" id="botw-note">Nov 22 – Dec 1 · <a href="https://wiseoldman.net/groups/16463/competitions" target="_blank" rel="noopener">All competitions ↗</a></p>
       </div>
       <div class="card news">
         <h3>Clan News</h3>
         <div style="margin-top:12px">
+          <div class="date">Nov 22, 2026</div>
+          <p style="color:#fff;font-weight:700;margin:2px 0 4px">🏃 Agility SOTW is live</p>
+          <p>Most Agility XP gained by Dec 1 takes the week. Live standings are in the Skill of the Week card. Leviathan BOTW is wrapped. GG to everyone who took part!</p>
+        </div>
+        <div style="margin-top:18px">
           <div class="date">November 2026</div>
           <p style="color:#fff;font-weight:700;margin:2px 0 4px">The November newsletter is out</p>
           <p>Total XP competition, Leviathan BOTW, Agility SOTW and more. <a href="#newsletter">Read the newsletter →</a></p>
@@ -990,25 +995,50 @@ const get = u => fetch(u).then(r=>{ if(!r.ok) throw new Error(r.status); return 
   }
 })();
 
-/* ---------- Live Boss of the Week (ongoing WOM competition) ---------- */
+/* ---------- Boss / Skill of the Week (live WOM competition; final results once it ends) ---------- */
 (async function(){
+  const $=id=>document.getElementById(id);
+  const SKILLS=['overall','attack','defence','strength','hitpoints','ranged','prayer','magic','cooking','woodcutting','fletching','fishing','firemaking','crafting','smithing','mining','herblore','agility','thieving','slayer','farming','runecrafting','hunter','construction','sailing'];
+  const fmt=(n,xp)=>!xp?n.toLocaleString():n>=1e6?(n/1e6).toFixed(n>=1e7?1:2).replace(/\.?0+$/,'')+'M':n>=1e3?Math.round(n/1e3)+'k':String(n);
+  const day=d=>new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric'});
   try {
-    const comps = await get(WOM+'/competitions?limit=50');
-    const now = Date.now();
-    const live = comps.filter(c=>/boss of the week/i.test(c.title) && new Date(c.startsAt)<=now && new Date(c.endsAt)>now)
-                      .sort((a,b)=>new Date(b.startsAt)-new Date(a.startsAt))[0];
-    if (!live) return;
-    const c = await get('https://api.wiseoldman.net/v2/competitions/'+live.id);
-    const ps = (c.participations||[]).filter(p=>p.progress?.gained>0).sort((a,b)=>b.progress.gained-a.progress.gained);
-    const boss = live.title.replace(/\s*-\s*boss of the week/i,'').trim();
-    const total = ps.reduce((a,p)=>a+p.progress.gained,0);
-    const ends = new Date(live.endsAt).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    document.getElementById('botw-boss').textContent = boss;
-    document.getElementById('botw-who').textContent = ps[0] ? ps[0].player.displayName : 'Up for grabs';
-    document.getElementById('botw-sub').textContent = ps[0] ? `Current leader · +${ps[0].progress.gained} KC` : 'No kills logged yet — be the first!';
-    document.getElementById('botw-rows').innerHTML = ps.length ? ps.slice(0,10).map((p,i)=>`<tr><td class="pos">${i+1}</td><td>${esc(p.player.displayName)}</td><td>+${p.progress.gained}</td></tr>`).join('') : '<tr><td colspan="3" class="empty">No kills logged yet.</td></tr>';
-    document.getElementById('botw-note').innerHTML = `Clan total: ${total} KC · Ends ${ends} · <a href="https://wiseoldman.net/competitions/${live.id}" target="_blank" rel="noopener">Full standings ↗</a>`;
-  } catch(e) {}
+    const comps=(await get(WOM+'/competitions?limit=50')).filter(c=>/(boss|skill) of the week|\b[bs]otw\b/i.test(c.title));
+    const now=Date.now(), t=d=>new Date(d).getTime();
+    const live=comps.filter(c=>t(c.startsAt)<=now && t(c.endsAt)>now).sort((a,b)=>t(b.startsAt)-t(a.startsAt))[0];
+    const done=comps.filter(c=>t(c.endsAt)<=now).sort((a,b)=>t(b.endsAt)-t(a.endsAt))[0];
+    const next=comps.filter(c=>t(c.startsAt)>now).sort((a,b)=>t(a.startsAt)-t(b.startsAt))[0];
+    const pick=live||next||done;
+    if (!pick){ $('wk-type').textContent='Boss / Skill of the Week'; $('botw-boss').textContent='Coming soon'; $('botw-who').textContent='Next competition soon'; $('botw-sub').textContent='Watch #announcements in Discord'; $('botw-rows').innerHTML='<tr><td colspan="3" class="empty">No competition running right now.</td></tr>'; return; }
+    const isSkill=/skill of the week|\bsotw\b/i.test(pick.title)||SKILLS.includes(pick.metric);
+    const name=pick.title.replace(/\b(boss|skill) of the week\b|\b[bs]otw\b/ig,'').replace(/^[\s\-–:|]+|[\s\-–:|]+$/g,'').trim()
+              || (pick.metric||'').replace(/_/g,' ').replace(/\b\w/g,m=>m.toUpperCase());
+    $('wk-type').textContent=isSkill?'Skill of the Week':'Boss of the Week';
+    $('botw-boss').textContent=name;
+    $('wk-unit').textContent=isSkill?'XP':'KC';
+    const link=`<a href="https://wiseoldman.net/competitions/${pick.id}" target="_blank" rel="noopener">Full standings ↗</a>`;
+    const c=await get('https://api.wiseoldman.net/v2/competitions/'+pick.id);
+    const ps=(c.participations||[]).filter(p=>p.progress?.gained>0).sort((a,b)=>b.progress.gained-a.progress.gained);
+    const total=ps.reduce((a,p)=>a+p.progress.gained,0);
+    const unit=isSkill?' XP':' KC';
+    if (pick===live){
+      $('botw-who').textContent=ps[0]?ps[0].player.displayName:'Up for grabs';
+      $('botw-sub').textContent=ps[0]?`Current leader · +${fmt(ps[0].progress.gained,isSkill)}${unit}`:(isSkill?'No XP logged yet. Be the first!':'No kills logged yet. Be the first!');
+      $('botw-note').innerHTML=`Clan total: ${fmt(total,isSkill)}${unit} · Ends ${day(pick.endsAt)} · ${link}`;
+    } else if (pick===done){
+      $('botw-who').textContent=ps[0]?ps[0].player.displayName:'No winner';
+      $('botw-sub').textContent=ps[0]?`Winner · +${fmt(ps[0].progress.gained,isSkill)}${unit}`:'Final results';
+      $('botw-note').innerHTML=`Final results · Ended ${day(pick.endsAt)} · ${link}`;
+    } else {
+      $('botw-who').textContent='Starts '+day(pick.startsAt);
+      $('botw-sub').textContent='Get ready!';
+      $('botw-note').innerHTML=`${day(pick.startsAt)} – ${day(pick.endsAt)} · ${link}`;
+    }
+    $('botw-rows').innerHTML=ps.length?ps.slice(0,10).map((p,i)=>`<tr><td class="pos">${i+1}</td><td>${esc(p.player.displayName)}</td><td>+${fmt(p.progress.gained,isSkill)}</td></tr>`).join(''):`<tr><td colspan="3" class="empty">${pick===next?'Not started yet.':'No progress logged yet.'}</td></tr>`;
+  } catch(e) {
+    $('botw-who').textContent='Standings unavailable';
+    $('botw-sub').textContent='Check Wise Old Man for the latest';
+    $('botw-rows').innerHTML='<tr><td colspan="3" class="empty">Couldn\'t load standings right now.</td></tr>';
+  }
 })();
 </script>
 </body>
